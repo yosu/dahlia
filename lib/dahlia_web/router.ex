@@ -68,6 +68,8 @@ defmodule DahliaWeb.Router do
       on_mount: [{DahliaWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/water", WaterBillLive, :index
     end
   end
 
