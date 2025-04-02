@@ -70,6 +70,7 @@ defmodule DahliaWeb.Router do
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
       live "/water", WaterBillLive, :index
+      live "/water/new", WaterBillLive, :new
     end
   end
 
