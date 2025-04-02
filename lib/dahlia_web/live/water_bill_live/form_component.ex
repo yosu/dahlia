@@ -16,8 +16,16 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <!--.input field={@form[:id]} type="text" label="Issue" /-->
-        <!--.input field={@form[:title]} type="text" label="タイトル" /-->
+        <.live_file_input upload={@uploads.photo} />
+        <div :for={entry <- @uploads.photo.entries}>
+          <.live_img_preview entry={entry} width="75" />
+
+          <progress max="100" value={entry.progress} />
+
+          <.button phx-click="cancel-upload" phx-value-ref={entry.ref} phx-target={@myself}>cancel</.button>
+
+          <.error :for={err <- upload_errors(@uploads.photo, entry)}>{Phoenix.Naming.humanize(err)}</.error>
+        </div>
 
         <:actions>
           <.button phx-disable-with="保存中...">保存</.button>
@@ -25,6 +33,11 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
       </.simple_form>
     </div>
     """
+  end
+
+  @impl true
+  def mount(socket) do
+    {:ok, allow_upload(socket, :photo, accept: ~w(.png .jpg .jpeg))}
   end
 
   @impl true
@@ -39,14 +52,24 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
   end
 
   @impl true
+  @spec handle_event(<<_::32, _::_*8>>, any(), any()) :: {:noreply, any()}
   def handle_event("validate", _params, socket) do
-    IO.puts("validate")
+    # We must implement minimal callback so that the upload validation works properly
+    # https://hexdocs.pm/phoenix_live_view/uploads.html#entry-validation
     {:noreply, socket}
   end
 
   def handle_event("save", _params, socket) do
-    IO.puts("save")
-    {:noreply, socket}
+    {:noreply,
+    socket
+    |> put_flash(:info, "保存しました")
+    |> push_patch(to: ~p"/water")
+  }
+  end
+
+  @impl true
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :photo, ref)}
   end
 
 end

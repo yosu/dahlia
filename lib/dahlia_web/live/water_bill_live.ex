@@ -6,7 +6,7 @@ defmodule DahliaWeb.WaterBillLive do
     <h1 class="p-2 text-center text-2xl">{@page_title}</h1>
     <div class="mb-2">
       <.link patch={~p"/water/new"}>
-        <.button>作成</.button>
+        <.button>アップロード</.button>
       </.link>
     </div>
     <hr />
@@ -35,7 +35,7 @@ defmodule DahliaWeb.WaterBillLive do
 
   defp apply_action(socket, :new, _parmas) do
     socket
-    |> assign(:page_title, "新規作成")
+    |> assign(:page_title, "水道料金・検針票のアップロード")
   end
 
   defp apply_action(socket, :index, _params) do
