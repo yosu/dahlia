@@ -10,7 +10,7 @@ defmodule Dahlia.BillFixtures do
     Enum.into(attrs, %{
       name: unique_name(),
       content_type: content_type,
-      data: "data",
+      data: "data"
     })
   end
 

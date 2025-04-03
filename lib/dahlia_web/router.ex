@@ -17,6 +17,12 @@ defmodule DahliaWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :image do
+    plug :accepts, ["image"]
+    plug :fetch_session
+    plug :fetch_current_user
+  end
+
   scope "/", DahliaWeb do
     pipe_through :browser
 
@@ -84,5 +90,11 @@ defmodule DahliaWeb.Router do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
+  end
+
+  scope "/", DahliaWeb do
+    pipe_through [:image, :require_authenticated_user_image]
+
+    get "/water/evidences/:id", WaterBillController, :show
   end
 end

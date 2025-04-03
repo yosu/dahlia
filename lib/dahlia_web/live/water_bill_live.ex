@@ -12,9 +12,10 @@ defmodule DahliaWeb.WaterBillLive do
       </.link>
     </div>
     <hr />
-    <div id="evidence-list" phx-update="stream"  >
-      <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id}>
-        {evidence.id} {evidence.name}
+    <div id="evidence-list" phx-update="stream">
+      <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
+        {evidence.name}
+        <img src={~p"/water/evidences/#{evidence}"} width="100" />
       </div>
     </div>
     <.modal
@@ -23,20 +24,15 @@ defmodule DahliaWeb.WaterBillLive do
       id="water-bill-evidence-modal"
       on_cancel={JS.patch(~p"/water")}
     >
-      <.live_component
-        module={DahliaWeb.WaterBillLive.FormComponent}
-        id={:new}
-        title={@page_title}
-       />
+      <.live_component module={DahliaWeb.WaterBillLive.FormComponent} id={:new} title={@page_title} />
     </.modal>
     """
   end
 
   def mount(_param, _session, socket) do
     {:ok,
-    socket
-    |> stream(:evidences, Bill.water_bill_evidence_list())
-  }
+     socket
+     |> stream(:evidences, Bill.water_bill_evidence_list())}
   end
 
   def handle_params(params, _uri, socket) do
@@ -55,7 +51,7 @@ defmodule DahliaWeb.WaterBillLive do
 
   def handle_info({DahliaWeb.WaterBillLive.FormComponent, {:saved, evidence}}, socket) do
     {:noreply,
-      socket
-      |> stream_insert(:evidences, evidence)}
+     socket
+     |> stream_insert(:evidences, evidence)}
   end
 end

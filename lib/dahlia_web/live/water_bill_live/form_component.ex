@@ -24,9 +24,13 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
 
           <progress max="100" value={entry.progress} />
 
-          <.button phx-click="cancel-upload" phx-value-ref={entry.ref} phx-target={@myself}>cancel</.button>
+          <.button phx-click="cancel-upload" phx-value-ref={entry.ref} phx-target={@myself}>
+            cancel
+          </.button>
 
-          <.error :for={err <- upload_errors(@uploads.photo, entry)}>{Phoenix.Naming.humanize(err)}</.error>
+          <.error :for={err <- upload_errors(@uploads.photo, entry)}>
+            {Phoenix.Naming.humanize(err)}
+          </.error>
         </div>
 
         <:actions>
@@ -45,12 +49,11 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
   @impl true
   def update(assigns, socket) do
     {:ok,
-      socket
-      |> assign(assigns)
-      |> assign_new(:form, fn ->
-        to_form(%{})
-      end)
-    }
+     socket
+     |> assign(assigns)
+     |> assign_new(:form, fn ->
+       to_form(%{})
+     end)}
   end
 
   @impl true
@@ -67,20 +70,19 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
     # IO.inspect(entry)
 
     [evidence] =
-    consume_uploaded_entries(socket, :photo, fn meta, entry ->
-      # IO.inspect(meta, label: "meta")
-      # IO.inspect(entry, label: "entry")
-      # Bill.save_water_bill_evidence(meta.path, entry)
-      Bill.save_water_bill_evidence_from_path(meta.path, entry.client_name, entry.client_type)
-    end)
+      consume_uploaded_entries(socket, :photo, fn meta, entry ->
+        # IO.inspect(meta, label: "meta")
+        # IO.inspect(entry, label: "entry")
+        # Bill.save_water_bill_evidence(meta.path, entry)
+        Bill.save_water_bill_evidence_from_path(meta.path, entry.client_name, entry.client_type)
+      end)
 
     notify_parent({:saved, evidence})
 
     {:noreply,
-    socket
-    |> put_flash(:info, "保存しました")
-    |> push_patch(to: ~p"/water")
-  }
+     socket
+     |> put_flash(:info, "保存しました")
+     |> push_patch(to: ~p"/water")}
   end
 
   @impl true
@@ -91,5 +93,4 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
   defp notify_parent(msg) do
     send(self(), {__MODULE__, msg})
   end
-
 end

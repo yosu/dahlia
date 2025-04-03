@@ -213,6 +213,16 @@ defmodule DahliaWeb.UserAuth do
     end
   end
 
+  def require_authenticated_user_image(conn, _opts) do
+    if conn.assigns[:current_user] do
+      conn
+    else
+      conn
+      |> send_resp(:unauthorized, "")
+      |> halt()
+    end
+  end
+
   defp put_token_in_session(conn, token) do
     conn
     |> put_session(:user_token, token)

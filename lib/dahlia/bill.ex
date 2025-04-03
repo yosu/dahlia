@@ -2,6 +2,16 @@ defmodule Dahlia.Bill do
   alias Dahlia.Bill.WaterBillEvidence
   alias Dahlia.Repo
 
+  @doc """
+  Gets a signle evidence.
+  """
+  def get_water_bill_evidence!(id) do
+    Repo.get!(WaterBillEvidence, id)
+  end
+
+  @doc """
+  Returns the list of evidences.
+  """
   def water_bill_evidence_list() do
     Repo.all(WaterBillEvidence.Query.order_by_inserted_at())
   end
@@ -15,7 +25,7 @@ defmodule Dahlia.Bill do
     save_water_bill_evidence(%{
       name: name,
       content_type: content_type,
-      data: data,
+      data: data
     })
   end
 
