@@ -1,4 +1,5 @@
 defmodule Dahlia.Bill do
+  @moduledoc false
   alias Dahlia.Bill.WaterBillEvidence
   alias Dahlia.Repo
 

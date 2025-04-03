@@ -1,4 +1,5 @@
 defmodule Dahlia.Bill.WaterBillEvidence do
+  @moduledoc false
   use Dahlia.Schema, prefix: "wbe_"
   import Ecto.Changeset
 

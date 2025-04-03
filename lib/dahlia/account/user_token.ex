@@ -1,4 +1,5 @@
 defmodule Dahlia.Account.UserToken do
+  @moduledoc false
   use Dahlia.Schema, prefix: "utk_"
   import Ecto.Query
   alias Dahlia.Account.UserToken

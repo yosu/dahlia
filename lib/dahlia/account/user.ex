@@ -1,4 +1,5 @@
 defmodule Dahlia.Account.User do
+  @moduledoc false
   use Dahlia.Schema, prefix: "usr_"
   import Ecto.Changeset
 

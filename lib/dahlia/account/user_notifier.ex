@@ -1,4 +1,5 @@
 defmodule Dahlia.Account.UserNotifier do
+  @moduledoc false
   import Swoosh.Email
 
   alias Dahlia.Mailer

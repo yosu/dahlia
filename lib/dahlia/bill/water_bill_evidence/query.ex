@@ -1,4 +1,7 @@
 defmodule Dahlia.Bill.WaterBillEvidence.Query do
+  @moduledoc """
+  Query module for WaterBillEvidence.
+  """
   import Ecto.Query
 
   alias Dahlia.Bill.WaterBillEvidence

@@ -1,4 +1,5 @@
 defmodule Dahlia.BillFixtures do
+  @moduledoc false
   alias Dahlia.Bill
 
   def unique_name, do: "name#{System.unique_integer()}.png"

@@ -1,4 +1,5 @@
 defmodule DahliaWeb.UserAuth do
+  @moduledoc false
   use DahliaWeb, :verified_routes
 
   import Plug.Conn
