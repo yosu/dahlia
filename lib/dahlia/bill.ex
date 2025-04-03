@@ -49,4 +49,11 @@ defmodule Dahlia.Bill do
     |> Base.encode64()
     |> then(&("md5-" <> &1))
   end
+
+  @doc """
+  Deletes a evidence.
+  """
+  def delete_water_bill_evidence(%WaterBillEvidence{} = evidence) do
+    Repo.delete(evidence)
+  end
 end

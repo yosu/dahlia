@@ -16,6 +16,13 @@ defmodule DahliaWeb.WaterBillLive do
       <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
         {evidence.name}
         <img src={~p"/water/evidences/#{evidence}"} width="100" />
+        <.link
+          class="text-red-500"
+          phx-click={JS.push("delete", value: %{"id" => evidence.id})}
+          data-confirm="本当に削除しますか？"
+        >
+          削除
+        </.link>
       </div>
     </div>
     <.modal
@@ -53,5 +60,14 @@ defmodule DahliaWeb.WaterBillLive do
     {:noreply,
      socket
      |> stream_insert(:evidences, evidence)}
+  end
+
+  def handle_event("delete", %{"id" => id}, socket) do
+    evidence = Bill.get_water_bill_evidence!(id)
+    {:ok, _deleted} = Bill.delete_water_bill_evidence(evidence)
+
+    {:noreply,
+     socket
+     |> stream_delete(:evidences, evidence)}
   end
 end

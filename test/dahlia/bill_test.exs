@@ -2,6 +2,7 @@ defmodule Dahlia.BillTest do
   use Dahlia.DataCase
 
   alias Dahlia.Bill
+  alias Dahlia.Bill.WaterBillEvidence
 
   import Dahlia.BillFixtures
 
@@ -18,6 +19,15 @@ defmodule Dahlia.BillTest do
       e = water_bill_evidence_fixture()
 
       assert Bill.get_water_bill_evidence!(e.id) == e
+    end
+  end
+
+  describe "delete_water_bill_evidence/1" do
+    test "deletes a evidence" do
+      e = water_bill_evidence_fixture()
+
+      assert {:ok, %WaterBillEvidence{}} = Bill.delete_water_bill_evidence(e)
+      assert_raise Ecto.NoResultsError, fn -> Bill.get_water_bill_evidence!(e.id) end
     end
   end
 end
