@@ -1,6 +1,8 @@
 defmodule DahliaWeb.WaterBillLive.FormComponent do
   use DahliaWeb, :live_component
 
+  alias Dahlia.Bill
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -60,6 +62,16 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
   end
 
   def handle_event("save", _params, socket) do
+    # IO.inspect(socket.assigns.upload.photo)
+    # {[entry], []} = uploaded_entries(socket, :photo)
+    # IO.inspect(entry)
+
+    consume_uploaded_entries(socket, :photo, fn meta, entry ->
+      IO.inspect(meta, label: "meta")
+      IO.inspect(entry, label: "entry")
+      Bill.save_water_bill_evidence(meta.path, entry)
+    end)
+
     {:noreply,
     socket
     |> put_flash(:info, "保存しました")
