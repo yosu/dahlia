@@ -7,15 +7,16 @@ defmodule Dahlia.Bill.WaterBillEvidence do
     field :name, :string
     field :content_type, :string
     field :content_length, :integer
-    field :data, :binary
     field :digest, :string
+
+    belongs_to(:data, Dahlia.Bill.WaterBillEvidenceData)
 
     timestamps(type: :utc_datetime_usec, updated_at: false)
   end
 
   def new_changeset(attrs) do
     %__MODULE__{}
-    |> cast(attrs, [:name, :content_type, :content_length, :data, :digest])
-    |> validate_required([:name, :content_type, :content_length, :data, :digest])
+    |> cast(attrs, [:name, :content_type, :content_length, :data_id, :digest])
+    |> validate_required([:name, :content_type, :content_length, :data_id, :digest])
   end
 end

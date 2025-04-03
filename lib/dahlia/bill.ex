@@ -1,6 +1,7 @@
 defmodule Dahlia.Bill do
   @moduledoc false
   alias Dahlia.Bill.WaterBillEvidence
+  alias Dahlia.Bill.WaterBillEvidenceData
   alias Dahlia.Repo
 
   @doc """
@@ -8,6 +9,12 @@ defmodule Dahlia.Bill do
   """
   def get_water_bill_evidence!(id) do
     Repo.get!(WaterBillEvidence, id)
+  end
+
+  def get_water_bill_evidence_with_data(id) do
+    WaterBillEvidence.Query.with_data()
+    |> WaterBillEvidence.Query.by_id(id)
+    |> Repo.one()
   end
 
   @doc """
@@ -34,14 +41,20 @@ defmodule Dahlia.Bill do
   Save the evidence data.
   """
   def save_water_bill_evidence(%{name: name, content_type: content_type, data: data}) do
-    WaterBillEvidence.new_changeset(%{
-      name: name,
-      data: data,
-      content_type: content_type,
-      content_length: byte_size(data),
-      digest: digest(data)
-    })
-    |> Repo.insert()
+    Repo.transaction(fn ->
+      evidence_data =
+        WaterBillEvidenceData.new_changeset(%{data: data})
+        |> Repo.insert!()
+
+      WaterBillEvidence.new_changeset(%{
+        name: name,
+        data_id: evidence_data.id,
+        content_type: content_type,
+        content_length: byte_size(data),
+        digest: digest(data)
+      })
+      |> Repo.insert!()
+    end)
   end
 
   defp digest(data) do

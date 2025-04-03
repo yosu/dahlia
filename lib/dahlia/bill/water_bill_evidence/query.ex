@@ -9,4 +9,14 @@ defmodule Dahlia.Bill.WaterBillEvidence.Query do
   def order_by_inserted_at(queryable \\ WaterBillEvidence) do
     order_by(queryable, {:desc, :inserted_at})
   end
+
+  def with_data() do
+    from e in WaterBillEvidence,
+      join: d in assoc(e, :data),
+      preload: [data: d]
+  end
+
+  def by_id(queryable \\ WaterBillEvidence, id) do
+    where(queryable, [e], e.id == ^id)
+  end
 end
