@@ -66,11 +66,15 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
     # {[entry], []} = uploaded_entries(socket, :photo)
     # IO.inspect(entry)
 
+    [evidence] =
     consume_uploaded_entries(socket, :photo, fn meta, entry ->
-      IO.inspect(meta, label: "meta")
-      IO.inspect(entry, label: "entry")
-      Bill.save_water_bill_evidence(meta.path, entry)
+      # IO.inspect(meta, label: "meta")
+      # IO.inspect(entry, label: "entry")
+      # Bill.save_water_bill_evidence(meta.path, entry)
+      Bill.save_water_bill_evidence_from_path(meta.path, entry.client_name, entry.client_type)
     end)
+
+    notify_parent({:saved, evidence})
 
     {:noreply,
     socket
@@ -82,6 +86,10 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
   @impl true
   def handle_event("cancel-upload", %{"ref" => ref}, socket) do
     {:noreply, cancel_upload(socket, :photo, ref)}
+  end
+
+  defp notify_parent(msg) do
+    send(self(), {__MODULE__, msg})
   end
 
 end

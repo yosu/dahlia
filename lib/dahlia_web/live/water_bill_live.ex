@@ -1,6 +1,8 @@
 defmodule DahliaWeb.WaterBillLive do
   use DahliaWeb, :live_view
 
+  alias Dahlia.Bill
+
   def render(assigns) do
     ~H"""
     <h1 class="p-2 text-center text-2xl">{@page_title}</h1>
@@ -10,6 +12,11 @@ defmodule DahliaWeb.WaterBillLive do
       </.link>
     </div>
     <hr />
+    <div id="evidence-list" phx-update="stream"  >
+      <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id}>
+        {evidence.id} {evidence.name}
+      </div>
+    </div>
     <.modal
       :if={@live_action in [:new]}
       show
@@ -26,7 +33,10 @@ defmodule DahliaWeb.WaterBillLive do
   end
 
   def mount(_param, _session, socket) do
-    {:ok, socket}
+    {:ok,
+    socket
+    |> stream(:evidences, Bill.water_bill_evidence_list())
+  }
   end
 
   def handle_params(params, _uri, socket) do
@@ -41,5 +51,11 @@ defmodule DahliaWeb.WaterBillLive do
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "水道料金一覧")
+  end
+
+  def handle_info({DahliaWeb.WaterBillLive.FormComponent, {:saved, evidence}}, socket) do
+    {:noreply,
+      socket
+      |> stream_insert(:evidences, evidence)}
   end
 end
