@@ -6,8 +6,6 @@ defmodule Dahlia.Bill.WaterBillSummary do
   schema "water_bill_summary" do
     field :bill_date, :date
     field :due_date, :date
-    field :total_charge, :integer
-    field :total_charge_internal_tax, :integer
     field :water_charge, :integer
     field :water_charge_internal_tax, :integer
     field :sewer_charge, :integer
@@ -28,8 +26,6 @@ defmodule Dahlia.Bill.WaterBillSummary do
     |> cast(attrs, [
       :bill_date,
       :due_date,
-      :total_charge,
-      :total_charge_internal_tax,
       :water_charge,
       :water_charge_internal_tax,
       :sewer_charge,
@@ -43,8 +39,6 @@ defmodule Dahlia.Bill.WaterBillSummary do
     |> validate_required([
       :bill_date,
       :due_date,
-      :total_charge,
-      :total_charge_internal_tax,
       :water_charge,
       :water_charge_internal_tax,
       :sewer_charge,
@@ -55,8 +49,6 @@ defmodule Dahlia.Bill.WaterBillSummary do
       :previous_read_date,
       :evidence_id
     ])
-    |> validate_number(:total_charge, greater_than_or_equal_to: 0)
-    |> validate_number(:total_charge_internal_tax, greater_than_or_equal_to: 0)
     |> validate_number(:water_charge, greater_than_or_equal_to: 0)
     |> validate_number(:water_charge_internal_tax, greater_than_or_equal_to: 0)
     |> validate_number(:sewer_charge, greater_than_or_equal_to: 0)

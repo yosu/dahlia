@@ -1,30 +1,28 @@
 defmodule Dahlia.BillTest do
+  alias Dahlia.Bill.WaterBillSummary
   use Dahlia.DataCase
 
   alias Dahlia.Bill
+  alias Dahlia.Bill.WaterBillSummary
 
   import Dahlia.BillFixtures
   import Dahlia.AccountFixtures
 
-  describe "water_bill_evidence_list/0" do
-    test "returns all evidences" do
+  describe "evidences" do
+    test "water_bill_evidence_list/0 returns all evidences" do
       user = user_fixture()
       evid = water_bill_evidence_fixture(%{user: user})
 
       assert Bill.water_bill_evidence_list(user) == [evid]
     end
-  end
 
-  describe "get_water_bill_evidence!/1" do
-    test "returns the evidence" do
+    test "get_water_bill_evidence!/1 returns the evidence" do
       e = water_bill_evidence_fixture()
 
       assert Bill.get_water_bill_evidence!(e.id) == e
     end
-  end
 
-  describe "delete_water_bill_evidence/1" do
-    test "deletes a evidence" do
+    test "delete_water_bill_evidence/1 deletes a evidence" do
       e = water_bill_evidence_fixture()
 
       assert {:ok, e} = Bill.delete_water_bill_evidence(e)
@@ -33,6 +31,37 @@ defmodule Dahlia.BillTest do
       assert_raise Ecto.NoResultsError, fn ->
         Bill.get_water_bill_evidence_data_by_evidence_id!(e.id)
       end
+    end
+  end
+
+  describe "summaries" do
+    test "create_summary/1 with valid data create a summary" do
+      e = water_bill_evidence_fixture()
+
+      valid_attrs = %{
+        bill_date: ~D[2025-04-02],
+        due_date: ~D[2025-04-30],
+        water_charge: 110,
+        water_charge_internal_tax: 10,
+        sewer_charge: 110,
+        sewer_charge_internal_tax: 10,
+        current_read: 10,
+        current_read_date: ~D[2025-04-02],
+        previous_read: 0,
+        previous_read_date: ~D[2025-03-01],
+        evidence_id: e.id
+      }
+
+      assert {:ok, %WaterBillSummary{} = summary} = Bill.create_summary(valid_attrs)
+      assert summary.evidence_id == e.id
+    end
+
+    test "create_summary/1 with invalid data returns error changeset" do
+      invalid_attrs = %{
+        water_charge: -1
+      }
+
+      assert {:error, %Ecto.Changeset{}} = Bill.create_summary(invalid_attrs)
     end
   end
 end

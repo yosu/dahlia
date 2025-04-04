@@ -57,7 +57,6 @@ defmodule DahliaWeb.WaterBillLive.EvidenceForm do
   end
 
   @impl true
-  @spec handle_event(<<_::32, _::_*8>>, any(), any()) :: {:noreply, any()}
   def handle_event("validate", _params, socket) do
     # We must implement minimal callback so that the upload validation works properly
     # https://hexdocs.pm/phoenix_live_view/uploads.html#entry-validation

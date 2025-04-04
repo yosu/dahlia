@@ -2,6 +2,7 @@ defmodule Dahlia.Bill do
   @moduledoc false
   alias Dahlia.Bill.WaterBillEvidence
   alias Dahlia.Bill.WaterBillEvidenceData
+  alias Dahlia.Bill.WaterBillSummary
   alias Dahlia.Repo
   alias Dahlia.Image
 
@@ -77,12 +78,18 @@ defmodule Dahlia.Bill do
   """
   def delete_water_bill_evidence(%WaterBillEvidence{} = evidence) do
     Repo.delete(evidence)
-    # Repo.transaction(fn ->
+  end
 
-    #   {1, nil} =
-    #     Repo.delete_all(from d in WaterBillEvidenceData, where: d.id == ^evidence.data_id)
+  @doc """
+  Returns WaterBillSummary changeset.
+  """
+  def change_summary(%WaterBillSummary{} = summary, attrs \\ %{}) do
+    WaterBillSummary.changeset(summary, attrs)
+  end
 
-    #   evidence
-    # end)
+  def create_summary(attrs \\ %{}) do
+    %WaterBillSummary{}
+    |> WaterBillSummary.changeset(attrs)
+    |> Repo.insert()
   end
 end
