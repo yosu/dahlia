@@ -27,20 +27,16 @@ defmodule Dahlia.Bill do
   @doc """
   Save the uploaded file into the database.
   """
-  def save_water_bill_evidence_from_path(path, name, content_type) do
+  def save_water_bill_evidence_from_upload(path, name) do
     {:ok, data} = File.read(path)
 
-    save_water_bill_evidence(%{
-      name: name,
-      content_type: content_type,
-      data: data
-    })
+    save_water_bill_evidence(%{name: name, data: data})
   end
 
   @doc """
   Save the evidence data.
   """
-  def save_water_bill_evidence(%{name: name, content_type: content_type, data: data}) do
+  def save_water_bill_evidence(%{name: name, data: data}) do
     Repo.transaction(fn ->
       evidence_data =
         WaterBillEvidenceData.new_changeset(%{data: data})
@@ -49,7 +45,7 @@ defmodule Dahlia.Bill do
       WaterBillEvidence.new_changeset(%{
         name: name,
         data_id: evidence_data.id,
-        content_type: content_type,
+        content_type: MIME.from_path(name),
         content_length: byte_size(data),
         digest: digest(data)
       })

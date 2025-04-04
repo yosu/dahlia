@@ -65,16 +65,9 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
   end
 
   def handle_event("save", _params, socket) do
-    # IO.inspect(socket.assigns.upload.photo)
-    # {[entry], []} = uploaded_entries(socket, :photo)
-    # IO.inspect(entry)
-
     [evidence] =
       consume_uploaded_entries(socket, :photo, fn meta, entry ->
-        # IO.inspect(meta, label: "meta")
-        # IO.inspect(entry, label: "entry")
-        # Bill.save_water_bill_evidence(meta.path, entry)
-        Bill.save_water_bill_evidence_from_path(meta.path, entry.client_name, entry.client_type)
+        Bill.save_water_bill_evidence_from_upload(meta.path, entry.client_name)
       end)
 
     notify_parent({:saved, evidence})
