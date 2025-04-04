@@ -19,7 +19,6 @@ defmodule Dahlia.Bill.WaterBillEvidence.Query do
   def with_user(queryable \\ WaterBillEvidence, user) do
     queryable
     |> where([e], e.user_id == ^user.id)
-
   end
 
   def by_id(queryable \\ WaterBillEvidence, id) do

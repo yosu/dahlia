@@ -11,6 +11,7 @@ defmodule Dahlia.Bill.WaterBillEvidence do
 
     belongs_to(:user, Dahlia.Account.User)
     has_one(:data, Dahlia.Bill.WaterBillEvidenceData, foreign_key: :evidence_id)
+    has_one(:summary, Dahlia.Bill.WaterBillSummary, foreign_key: :evidence_id)
 
     timestamps(type: :utc_datetime_usec, updated_at: false)
   end

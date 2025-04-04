@@ -26,7 +26,10 @@ defmodule Dahlia.Bill do
   Returns the list of evidences belongs to the user.
   """
   def water_bill_evidence_list(user) do
-    Repo.all(WaterBillEvidence.Query.order_by_inserted_at() |> WaterBillEvidence.Query.with_user(user))
+    Repo.all(
+      WaterBillEvidence.Query.order_by_inserted_at()
+      |> WaterBillEvidence.Query.with_user(user)
+    )
   end
 
   @doc """
@@ -37,7 +40,8 @@ defmodule Dahlia.Bill do
 
     {compact_name, compact_data} = Image.compact!(name, data)
 
-    {:ok, _evidence} = save_water_bill_evidence(%{name: compact_name, data: compact_data, user: user})
+    {:ok, _evidence} =
+      save_water_bill_evidence(%{name: compact_name, data: compact_data, user: user})
   end
 
   @doc """
@@ -45,14 +49,15 @@ defmodule Dahlia.Bill do
   """
   def save_water_bill_evidence(%{name: name, data: data, user: user}) do
     Repo.transaction(fn ->
-      evidence = WaterBillEvidence.new_changeset(%{
-        name: name,
-        content_type: MIME.from_path(name),
-        content_length: byte_size(data),
-        digest: digest(data),
-        user_id: user.id
-      })
-      |> Repo.insert!()
+      evidence =
+        WaterBillEvidence.new_changeset(%{
+          name: name,
+          content_type: MIME.from_path(name),
+          content_length: byte_size(data),
+          digest: digest(data),
+          user_id: user.id
+        })
+        |> Repo.insert!()
 
       WaterBillEvidenceData.new_changeset(%{data: data, evidence_id: evidence.id})
       |> Repo.insert!()
