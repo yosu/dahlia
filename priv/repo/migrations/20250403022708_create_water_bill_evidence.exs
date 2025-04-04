@@ -20,9 +20,12 @@ defmodule Dahlia.Repo.Migrations.CreateWaterBillEvidence do
 
       add :digest, :string, null: false
 
+      add :user_id, references(:users, type: :string, on_delete: :delete_all), null: false
+
       timestamps(type: :utc_datetime_usec, updated_at: false)
     end
 
     create unique_index(:water_bill_evidence, :data_id)
+    create index(:water_bill_evidence, :user_id)
   end
 end

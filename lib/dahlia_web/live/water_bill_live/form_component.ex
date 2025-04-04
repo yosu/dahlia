@@ -65,9 +65,11 @@ defmodule DahliaWeb.WaterBillLive.FormComponent do
   end
 
   def handle_event("save", _params, socket) do
+    user = socket.assigns.current_user
+
     [evidence] =
       consume_uploaded_entries(socket, :photo, fn meta, entry ->
-        Bill.save_water_bill_evidence_from_upload(meta.path, entry.client_name)
+        Bill.save_water_bill_evidence_from_upload(meta.path, entry.client_name, user)
       end)
 
     notify_parent({:saved, evidence})

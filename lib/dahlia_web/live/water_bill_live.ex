@@ -1,5 +1,5 @@
 defmodule DahliaWeb.WaterBillLive do
-alias DahliaWeb.Endpoint
+  alias DahliaWeb.Endpoint
   use DahliaWeb, :live_view
 
   alias Dahlia.Bill
@@ -18,7 +18,11 @@ alias DahliaWeb.Endpoint
     <hr />
     <div id="evidence-list" phx-update="stream">
       <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
-        <img src={~p"/water/evidences/#{evidence}"} width="800" class="cursor-pointer border-4 border-transparent hover:border-4 hover:border-brand" />
+        <img
+          src={~p"/water/evidences/#{evidence}"}
+          width="800"
+          class="cursor-pointer border-4 border-transparent hover:border-4 hover:border-brand"
+        />
         <.link
           class="text-red-500"
           phx-click={JS.push("delete", value: %{"id" => evidence.id})}
@@ -34,13 +38,17 @@ alias DahliaWeb.Endpoint
       id="water-bill-evidence-modal"
       on_cancel={JS.patch(~p"/water")}
     >
-      <.live_component module={DahliaWeb.WaterBillLive.FormComponent} id={:new} title={@page_title} />
+      <.live_component
+        module={DahliaWeb.WaterBillLive.FormComponent}
+        id={:new}
+        title={@page_title}
+        current_user={@current_user}
+      />
     </.modal>
     """
   end
 
   def mount(_param, _session, socket) do
-
     if connected?(socket) do
       Endpoint.subscribe(topic(socket))
     end

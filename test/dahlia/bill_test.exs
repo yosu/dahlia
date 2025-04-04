@@ -2,7 +2,6 @@ defmodule Dahlia.BillTest do
   use Dahlia.DataCase
 
   alias Dahlia.Bill
-  alias Dahlia.Bill.WaterBillEvidence
 
   import Dahlia.BillFixtures
 
