@@ -25,10 +25,10 @@ defmodule Dahlia.Bill do
   end
 
   @doc """
-  Returns the list of evidences.
+  Returns the list of evidences belongs to the user.
   """
-  def water_bill_evidence_list() do
-    Repo.all(WaterBillEvidence.Query.order_by_inserted_at())
+  def water_bill_evidence_list(user) do
+    Repo.all(WaterBillEvidence.Query.order_by_inserted_at() |> WaterBillEvidence.Query.with_user(user))
   end
 
   @doc """

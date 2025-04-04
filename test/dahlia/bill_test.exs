@@ -4,12 +4,14 @@ defmodule Dahlia.BillTest do
   alias Dahlia.Bill
 
   import Dahlia.BillFixtures
+  import Dahlia.AccountFixtures
 
   describe "water_bill_evidence_list/0" do
     test "returns all evidences" do
-      evid = water_bill_evidence_fixture()
+      user = user_fixture()
+      evid = water_bill_evidence_fixture(%{user: user})
 
-      assert Bill.water_bill_evidence_list() == [evid]
+      assert Bill.water_bill_evidence_list(user) == [evid]
     end
   end
 

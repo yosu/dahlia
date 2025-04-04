@@ -55,7 +55,7 @@ defmodule DahliaWeb.WaterBillLive do
 
     {:ok,
      socket
-     |> stream(:evidences, Bill.water_bill_evidence_list())}
+     |> stream(:evidences, Bill.water_bill_evidence_list(socket.assigns.current_user))}
   end
 
   defp topic(socket) do
