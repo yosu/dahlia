@@ -3,6 +3,7 @@ defmodule Dahlia.Bill do
   alias Dahlia.Bill.WaterBillEvidence
   alias Dahlia.Bill.WaterBillEvidenceData
   alias Dahlia.Repo
+  alias Dahlia.Image
 
   @doc """
   Gets a signle evidence.
@@ -30,7 +31,9 @@ defmodule Dahlia.Bill do
   def save_water_bill_evidence_from_upload(path, name) do
     {:ok, data} = File.read(path)
 
-    save_water_bill_evidence(%{name: name, data: data})
+    {compact_name, compact_data} = Image.compact!(name, data)
+
+    save_water_bill_evidence(%{name: compact_name, data: compact_data})
   end
 
   @doc """
