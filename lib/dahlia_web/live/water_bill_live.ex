@@ -14,8 +14,7 @@ defmodule DahliaWeb.WaterBillLive do
     <hr />
     <div id="evidence-list" phx-update="stream">
       <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
-        {evidence.name}
-        <img src={~p"/water/evidences/#{evidence}"} width="100" />
+        <img src={~p"/water/evidences/#{evidence}"} width="800" class="cursor-pointer border-4 border-transparent hover:border-4 hover:border-brand" />
         <.link
           class="text-red-500"
           phx-click={JS.push("delete", value: %{"id" => evidence.id})}
@@ -53,7 +52,7 @@ defmodule DahliaWeb.WaterBillLive do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "水道料金一覧")
+    |> assign(:page_title, "未処理の水道料金・検針表")
   end
 
   def handle_info({DahliaWeb.WaterBillLive.FormComponent, {:saved, evidence}}, socket) do
