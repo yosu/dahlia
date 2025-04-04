@@ -5,8 +5,6 @@ defmodule Dahlia.Bill do
   alias Dahlia.Repo
   alias Dahlia.Image
 
-  import Ecto.Query
-
   @doc """
   Gets a single evidence.
   """
@@ -14,8 +12,8 @@ defmodule Dahlia.Bill do
     Repo.get!(WaterBillEvidence, id)
   end
 
-  def get_water_bill_evidence_data!(id) do
-    Repo.get!(WaterBillEvidenceData, id)
+  def get_water_bill_evidence_data_by_evidence_id!(evidence_id) do
+    Repo.get_by!(WaterBillEvidenceData, evidence_id: evidence_id)
   end
 
   def get_water_bill_evidence_with_data(id) do
@@ -39,7 +37,7 @@ defmodule Dahlia.Bill do
 
     {compact_name, compact_data} = Image.compact!(name, data)
 
-    save_water_bill_evidence(%{name: compact_name, data: compact_data, user: user})
+    {:ok, _evidence} = save_water_bill_evidence(%{name: compact_name, data: compact_data, user: user})
   end
 
   @doc """
@@ -47,19 +45,19 @@ defmodule Dahlia.Bill do
   """
   def save_water_bill_evidence(%{name: name, data: data, user: user}) do
     Repo.transaction(fn ->
-      evidence_data =
-        WaterBillEvidenceData.new_changeset(%{data: data})
-        |> Repo.insert!()
-
-      WaterBillEvidence.new_changeset(%{
+      evidence = WaterBillEvidence.new_changeset(%{
         name: name,
-        data_id: evidence_data.id,
         content_type: MIME.from_path(name),
         content_length: byte_size(data),
         digest: digest(data),
         user_id: user.id
       })
       |> Repo.insert!()
+
+      WaterBillEvidenceData.new_changeset(%{data: data, evidence_id: evidence.id})
+      |> Repo.insert!()
+
+      evidence
     end)
   end
 
@@ -73,13 +71,13 @@ defmodule Dahlia.Bill do
   Deletes a evidence.
   """
   def delete_water_bill_evidence(%WaterBillEvidence{} = evidence) do
-    Repo.transaction(fn ->
-      Repo.delete!(evidence)
+    Repo.delete(evidence)
+    # Repo.transaction(fn ->
 
-      {1, nil} =
-        Repo.delete_all(from d in WaterBillEvidenceData, where: d.id == ^evidence.data_id)
+    #   {1, nil} =
+    #     Repo.delete_all(from d in WaterBillEvidenceData, where: d.id == ^evidence.data_id)
 
-      evidence
-    end)
+    #   evidence
+    # end)
   end
 end

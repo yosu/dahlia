@@ -29,7 +29,7 @@ defmodule Dahlia.BillTest do
 
       assert {:ok, e} = Bill.delete_water_bill_evidence(e)
       assert_raise Ecto.NoResultsError, fn -> Bill.get_water_bill_evidence!(e.id) end
-      assert_raise Ecto.NoResultsError, fn -> Bill.get_water_bill_evidence_data!(e.data_id) end
+      assert_raise Ecto.NoResultsError, fn -> Bill.get_water_bill_evidence_data_by_evidence_id!(e.id) end
     end
   end
 end

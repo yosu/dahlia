@@ -77,7 +77,7 @@ defmodule DahliaWeb.WaterBillLive do
     |> assign(:page_title, "未処理の水道料金・検針表")
   end
 
-  def handle_info({DahliaWeb.WaterBillLive.FormComponent, {:saved, evidence}}, socket) do
+  def handle_info({DahliaWeb.WaterBillLive.EvidenceForm, {:saved, evidence}}, socket) do
     Endpoint.broadcast(topic(socket), "evidence_saved", %{evidence: evidence})
 
     {:noreply, socket}

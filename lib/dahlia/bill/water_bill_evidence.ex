@@ -10,14 +10,14 @@ defmodule Dahlia.Bill.WaterBillEvidence do
     field :digest, :string
 
     belongs_to(:user, Dahlia.Account.User)
-    belongs_to(:data, Dahlia.Bill.WaterBillEvidenceData)
+    has_one(:data, Dahlia.Bill.WaterBillEvidenceData, foreign_key: :evidence_id)
 
     timestamps(type: :utc_datetime_usec, updated_at: false)
   end
 
   def new_changeset(attrs) do
     %__MODULE__{}
-    |> cast(attrs, [:name, :content_type, :content_length, :data_id, :digest, :user_id])
-    |> validate_required([:name, :content_type, :content_length, :data_id, :digest, :user_id])
+    |> cast(attrs, [:name, :content_type, :content_length, :digest, :user_id])
+    |> validate_required([:name, :content_type, :content_length, :digest, :user_id])
   end
 end
