@@ -26,8 +26,9 @@ defmodule Dahlia.BillTest do
     test "deletes a evidence" do
       e = water_bill_evidence_fixture()
 
-      assert {:ok, %WaterBillEvidence{}} = Bill.delete_water_bill_evidence(e)
+      assert {:ok, e} = Bill.delete_water_bill_evidence(e)
       assert_raise Ecto.NoResultsError, fn -> Bill.get_water_bill_evidence!(e.id) end
+      assert_raise Ecto.NoResultsError, fn -> Bill.get_water_bill_evidence_data!(e.data_id) end
     end
   end
 end

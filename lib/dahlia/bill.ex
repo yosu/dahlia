@@ -5,11 +5,17 @@ defmodule Dahlia.Bill do
   alias Dahlia.Repo
   alias Dahlia.Image
 
+  import Ecto.Query
+
   @doc """
-  Gets a signle evidence.
+  Gets a single evidence.
   """
   def get_water_bill_evidence!(id) do
     Repo.get!(WaterBillEvidence, id)
+  end
+
+  def get_water_bill_evidence_data!(id) do
+    Repo.get!(WaterBillEvidenceData, id)
   end
 
   def get_water_bill_evidence_with_data(id) do
@@ -66,6 +72,13 @@ defmodule Dahlia.Bill do
   Deletes a evidence.
   """
   def delete_water_bill_evidence(%WaterBillEvidence{} = evidence) do
-    Repo.delete(evidence)
+    Repo.transaction(fn ->
+      Repo.delete!(evidence)
+
+      {1, nil} =
+        Repo.delete_all(from d in WaterBillEvidenceData, where: d.id == ^evidence.data_id)
+
+      evidence
+    end)
   end
 end
