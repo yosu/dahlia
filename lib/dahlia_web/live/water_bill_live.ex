@@ -39,7 +39,7 @@ defmodule DahliaWeb.WaterBillLive do
       on_cancel={JS.patch(~p"/water")}
     >
       <.live_component
-        module={DahliaWeb.WaterBillLive.FormComponent}
+        module={DahliaWeb.WaterBillLive.EvidenceForm}
         id={:new}
         title={@page_title}
         current_user={@current_user}

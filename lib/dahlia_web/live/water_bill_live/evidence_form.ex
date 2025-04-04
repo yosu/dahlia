@@ -1,4 +1,4 @@
-defmodule DahliaWeb.WaterBillLive.FormComponent do
+defmodule DahliaWeb.WaterBillLive.EvidenceForm do
   use DahliaWeb, :live_component
 
   alias Dahlia.Bill
