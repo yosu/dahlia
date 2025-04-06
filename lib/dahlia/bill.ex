@@ -117,4 +117,14 @@ defmodule Dahlia.Bill do
     |> WaterBillSummary.changeset(attrs)
     |> Repo.insert()
   end
+
+  def update_summary(%WaterBillSummary{} = summary, attrs \\ %{}) do
+    summary
+    |> WaterBillSummary.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def get_water_bill_summary_by_evidence_id!(evidence_id) do
+    Repo.get_by!(WaterBillSummary, evidence_id: evidence_id)
+  end
 end

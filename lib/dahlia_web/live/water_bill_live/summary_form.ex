@@ -67,13 +67,28 @@ defmodule DahliaWeb.WaterBillLive.SummaryForm do
   end
 
   def handle_event("save", %{"water_bill_summary" => summary_params}, socket) do
-    save_summary(summary_params, socket)
+    save_summary(summary_params, socket.assigns.action, socket)
   end
 
-  defp save_summary(params, socket) do
+  defp save_summary(params, :summary_new, socket) do
     case Bill.create_summary(params) do
       {:ok, summary} ->
         notify_parent({:saved, summary})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "保存しました")
+         |> push_patch(to: ~p"/water")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :form, to_form(changeset))}
+    end
+  end
+
+  defp save_summary(params, :summary_edit, socket) do
+    case Bill.update_summary(socket.assigns.summary, params) do
+      {:ok, summary} ->
+        notify_parent({:updated, summary})
 
         {:noreply,
          socket

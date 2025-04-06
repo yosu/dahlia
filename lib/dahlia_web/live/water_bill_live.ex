@@ -3,83 +3,11 @@ defmodule DahliaWeb.WaterBillLive do
   use DahliaWeb, :live_view
 
   alias Dahlia.Bill
-  alias Dahlia.Bill.WaterBillSummary
   alias DahliaWeb.Endpoint
 
-  @evidence_topic "evidence_topic"
+  import DahliaWeb.WaterBillLive.Component
 
-  def render(assigns) do
-    ~H"""
-    <h1 class="p-2 text-center text-2xl">{@page_title}</h1>
-    <div class="mb-2">
-      <.link patch={~p"/water/new"}>
-        <.button>アップロード</.button>
-      </.link>
-    </div>
-    <hr />
-    <div id="evidence-list" phx-update="stream">
-      <div class="hidden last-child:block py-10 text-center">未処理の水道料金・検針票はありません。</div>
-      <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
-        <img
-          phx-click={JS.patch(~p"/water/#{evidence.id}/summary/new")}
-          src={~p"/water/evidences/#{evidence}"}
-          width="800"
-          class="cursor-pointer border-4 border-transparent hover:border-4 hover:border-brand"
-        />
-        <.link
-          class="text-red-500"
-          phx-click={JS.push("delete", value: %{"id" => evidence.id})}
-          data-confirm="本当に削除しますか？"
-        >
-          削除
-        </.link>
-      </div>
-    </div>
-    <div>
-      <h2 class="text-center text-2xl">処理済みの水道料金・検針票</h2>
-      <table class="p-2">
-        <thead>
-          <th>請求日</th>
-          <th>請求金額</th>
-        </thead>
-        <tbody id="summary-list" phx-update="stream">
-          <tr :for={{dom_id, summary} <- @streams.summaries} id={dom_id} class="py-2">
-            <td class="text-right">{summary.bill_date}</td>
-            <td class="pl-4 text-right">{WaterBillSummary.total_charge(summary)}円</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <.modal
-      :if={@live_action in [:new]}
-      show
-      id="water-bill-evidence-modal"
-      on_cancel={JS.patch(~p"/water")}
-    >
-      <.live_component
-        module={DahliaWeb.WaterBillLive.EvidenceForm}
-        id={:new}
-        title={@page_title}
-        current_user={@current_user}
-      />
-    </.modal>
-    <.modal
-      :if={@live_action in [:summary_new]}
-      show
-      id="water-bill-summary-modal"
-      on_cancel={JS.patch(~p"/water")}
-    >
-      <.live_component
-        module={DahliaWeb.WaterBillLive.SummaryForm}
-        id={:summary_new}
-        title={@page_title}
-        current_user={@current_user}
-        summary={@summary}
-        evidence_id={@evidence_id}
-      />
-    </.modal>
-    """
-  end
+  @evidence_topic "evidence_topic"
 
   def mount(_param, _session, socket) do
     if connected?(socket) do
@@ -120,6 +48,15 @@ defmodule DahliaWeb.WaterBillLive do
     |> assign(:summary, %Dahlia.Bill.WaterBillSummary{})
   end
 
+  defp apply_action(socket, :summary_edit, %{"evidence_id" => evidence_id}) do
+    summary = Bill.get_water_bill_summary_by_evidence_id!(evidence_id)
+
+    socket
+    |> assign(:page_title, "水道料金・検針票の記録")
+    |> assign(:evidence_id, evidence_id)
+    |> assign(:summary, summary)
+  end
+
   def handle_info({DahliaWeb.WaterBillLive.EvidenceForm, {:saved, evidence}}, socket) do
     Endpoint.broadcast(topic(socket), "evidence_saved", %{evidence: evidence})
 
@@ -128,6 +65,12 @@ defmodule DahliaWeb.WaterBillLive do
 
   def handle_info({DahliaWeb.WaterBillLive.SummaryForm, {:saved, summary}}, socket) do
     Endpoint.broadcast(topic(socket), "summary_saved", %{summary: summary})
+
+    {:noreply, socket}
+  end
+
+  def handle_info({DahliaWeb.WaterBillLive.SummaryForm, {:updated, summary}}, socket) do
+    Endpoint.broadcast(topic(socket), "summary_updated", %{summary: summary})
 
     {:noreply, socket}
   end
@@ -144,6 +87,12 @@ defmodule DahliaWeb.WaterBillLive do
     {:noreply,
      socket
      |> stream_delete(:evidences, %{id: summary.evidence_id})
+     |> stream_insert(:summaries, summary)}
+  end
+
+  def handle_info(%{event: "summary_updated", payload: %{summary: summary}}, socket) do
+    {:noreply,
+     socket
      |> stream_insert(:summaries, summary)}
   end
 
