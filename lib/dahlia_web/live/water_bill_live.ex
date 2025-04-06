@@ -86,10 +86,12 @@ defmodule DahliaWeb.WaterBillLive do
       Endpoint.subscribe(topic(socket))
     end
 
+    user = socket.assigns.current_user
+
     {:ok,
      socket
-     |> stream(:evidences, Bill.outstanding_water_bill_evidence_list(socket.assigns.current_user))
-     |> stream(:summaries, Bill.water_bill_summary_list())}
+     |> stream(:evidences, Bill.outstanding_water_bill_evidence_list(user))
+     |> stream(:summaries, Bill.water_bill_summary_list(user))}
   end
 
   defp topic(socket) do

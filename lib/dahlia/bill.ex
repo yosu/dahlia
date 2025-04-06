@@ -54,8 +54,14 @@ defmodule Dahlia.Bill do
     Repo.all(query)
   end
 
-  def water_bill_summary_list() do
-    Repo.all(WaterBillSummary)
+  def water_bill_summary_list(user) do
+    query =
+      from s in WaterBillSummary,
+        join: e in WaterBillEvidence,
+        on: s.evidence_id == e.id,
+        where: e.user_id == ^user.id
+
+    Repo.all(query)
   end
 
   @doc """

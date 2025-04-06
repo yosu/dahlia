@@ -1,4 +1,5 @@
 defmodule Dahlia.BillTest do
+  alias Dahlia.Account
   alias Dahlia.Bill.WaterBillSummary
   use Dahlia.DataCase
 
@@ -43,10 +44,12 @@ defmodule Dahlia.BillTest do
   end
 
   describe "summaries" do
-    test "water_bill_summary_list/0 returns the list of summaries" do
+    test "water_bill_summary_list/1 returns the list of summaries" do
       summary = water_bill_summary_fixture()
+      evidence = Bill.get_water_bill_evidence!(summary.evidence_id)
+      user = Account.get_user!(evidence.user_id)
 
-      assert Bill.water_bill_summary_list() == [summary]
+      assert Bill.water_bill_summary_list(user) == [summary]
     end
 
     test "create_summary/1 with valid data create a summary" do
