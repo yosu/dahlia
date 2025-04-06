@@ -21,4 +21,10 @@ defmodule Dahlia.Bill.WaterBillEvidence do
     |> cast(attrs, [:name, :content_type, :content_length, :digest, :user_id])
     |> validate_required([:name, :content_type, :content_length, :digest, :user_id])
   end
+
+  def digest(data) when is_binary(data) do
+    :crypto.hash(:md5, data)
+    |> Base.encode64()
+    |> then(&("md5-" <> &1))
+  end
 end

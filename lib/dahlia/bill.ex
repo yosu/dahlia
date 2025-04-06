@@ -74,7 +74,7 @@ defmodule Dahlia.Bill do
           name: name,
           content_type: MIME.from_path(name),
           content_length: byte_size(data),
-          digest: digest(data),
+          digest: WaterBillEvidence.digest(data),
           user_id: user.id
         })
         |> Repo.insert!()
@@ -84,12 +84,6 @@ defmodule Dahlia.Bill do
 
       evidence
     end)
-  end
-
-  defp digest(data) do
-    :crypto.hash(:md5, data)
-    |> Base.encode64()
-    |> then(&("md5-" <> &1))
   end
 
   @doc """
