@@ -16,6 +16,8 @@ defmodule DahliaWeb.WaterBillLive.Component do
     """
   end
 
+  attr :summaries, :list, required: true
+
   def summary_table(assigns) do
     ~H"""
     <table class="p-2">
@@ -24,8 +26,8 @@ defmodule DahliaWeb.WaterBillLive.Component do
         <th class="px-4">請求金額</th>
         <th></th>
       </thead>
-      <tbody id="summary-list" phx-update="stream">
-        <tr :for={{dom_id, summary} <- @streams.summaries} id={dom_id} class="py-2">
+      <tbody>
+        <tr :for={summary <- @summaries} id={summary.id} class="py-2">
           <.summary_cell summary={summary}>{summary.bill_date}</.summary_cell>
           <.summary_cell summary={summary}>{WaterBillSummary.total_charge(summary)}円</.summary_cell>
           <td>

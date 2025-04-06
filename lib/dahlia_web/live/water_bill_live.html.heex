@@ -22,9 +22,9 @@
     </.link>
   </div>
 </div>
-<div>
+<div :if={@summaries != []}>
   <h2 class="text-center text-2xl">処理済みの水道料金・検針票</h2>
-  <.summary_table streams={@streams} />
+  <.summary_table summaries={@summaries}/>
 </div>
 <.modal
   :if={@live_action in [:new]}

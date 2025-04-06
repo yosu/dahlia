@@ -20,12 +20,18 @@ defmodule DahliaWeb.WaterBillLive do
     {:ok,
      socket
      |> stream(:evidences, Bill.outstanding_water_bill_evidence_list(user))
-     |> stream(:summaries, Bill.water_bill_summary_list(user))}
+     |> assign_summaries()}
+
   end
 
   defp topic(socket) do
     user = socket.assigns.current_user
     @evidence_topic <> ":" <> user.id
+  end
+
+  defp assign_summaries(socket) do
+    socket
+    |> assign(:summaries, Bill.water_bill_summary_list(socket.assigns.current_user))
   end
 
   def handle_params(params, _uri, socket) do
@@ -88,17 +94,15 @@ defmodule DahliaWeb.WaterBillLive do
     {:noreply,
      socket
      |> stream_delete(:evidences, %{id: summary.evidence_id})
-     |> stream_insert(:summaries, summary)}
+     |> assign_summaries()}
   end
 
-  def handle_info(%{event: "summary_updated", payload: %{summary: summary}}, socket) do
-    {:noreply,
-     socket
-     |> stream_insert(:summaries, summary)}
+  def handle_info(%{event: "summary_updated", payload: %{summary: _summary}}, socket) do
+    {:noreply, assign_summaries(socket)}
   end
 
-  def handle_info(%{event: "summary_deleted", payload: %{summary: summary}}, socket) do
-    {:noreply, stream_delete(socket, :summaries, summary)}
+  def handle_info(%{event: "summary_deleted", payload: %{summary: _summary}}, socket) do
+    {:noreply, assign_summaries(socket)}
   end
 
   def handle_event("delete", %{"id" => evidence_id}, socket) do
