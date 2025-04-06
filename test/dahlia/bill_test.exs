@@ -1,4 +1,5 @@
 defmodule Dahlia.BillTest do
+  alias Dahlia.Bill.WaterBillEvidence
   alias Dahlia.Account
   alias Dahlia.Bill.WaterBillSummary
   use Dahlia.DataCase
@@ -83,6 +84,26 @@ defmodule Dahlia.BillTest do
       summary = water_bill_summary_fixture()
 
       assert Bill.get_water_bill_summary_by_evidence_id!(summary.evidence_id) == summary
+    end
+
+    test "get_water_bill_summary_by_evidence_id/1 with valid evidence id returns the summary" do
+      summary = water_bill_summary_fixture()
+
+      assert ^summary = Bill.get_water_bill_summary_by_evidence_id(summary.evidence_id)
+    end
+
+    test "get_water_bill_summary_by_evidence_id/1 with invalid evidence id returns nil" do
+      water_bill_summary_fixture()
+
+      assert Bill.get_water_bill_summary_by_evidence_id("invalid") == nil
+    end
+
+    test "delete_water_bill_summary/1 deletes the summary" do
+      summary = water_bill_summary_fixture()
+
+      assert {:ok, %WaterBillSummary{}} = Bill.delete_water_bill_summary(summary)
+      assert_raise Ecto.NoResultsError, fn -> Bill.get_water_bill_summary!(summary.id) end
+      assert %WaterBillEvidence{} = Bill.get_water_bill_evidence!(summary.evidence_id)
     end
   end
 end

@@ -127,4 +127,16 @@ defmodule Dahlia.Bill do
   def get_water_bill_summary_by_evidence_id!(evidence_id) do
     Repo.get_by!(WaterBillSummary, evidence_id: evidence_id)
   end
+
+  def get_water_bill_summary_by_evidence_id(evidence_id) do
+    Repo.get_by(WaterBillSummary, evidence_id: evidence_id)
+  end
+
+  def delete_water_bill_summary(%WaterBillSummary{} = summary) do
+    Repo.delete(summary)
+  end
+
+  def get_water_bill_summary!(summary_id) do
+    Repo.get!(WaterBillSummary, summary_id)
+  end
 end

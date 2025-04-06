@@ -20,14 +20,23 @@ defmodule DahliaWeb.WaterBillLive.Component do
     ~H"""
     <table class="p-2">
       <thead>
-        <th>請求日</th>
-        <th>請求金額</th>
+        <th class="px-4">請求日</th>
+        <th class="px-4">請求金額</th>
+        <th></th>
       </thead>
       <tbody id="summary-list" phx-update="stream">
         <tr :for={{dom_id, summary} <- @streams.summaries} id={dom_id} class="py-2">
           <.summary_cell summary={summary}>{summary.bill_date}</.summary_cell>
-          <td class="px-4 text-right">{summary.bill_date}</td>
-          <td class="px-4 text-right">{WaterBillSummary.total_charge(summary)}円</td>
+          <.summary_cell summary={summary}>{WaterBillSummary.total_charge(summary)}円</.summary_cell>
+          <td>
+            <.link
+              class="text-red-500"
+              phx-click={JS.push("delete", value: %{"id" => summary.evidence_id})}
+              data-confirm="本当に削除しますか？"
+            >
+              削除
+            </.link>
+          </td>
         </tr>
       </tbody>
     </table>

@@ -1,4 +1,5 @@
 defmodule DahliaWeb.WaterBillLive do
+  alias Dahlia.Bill.WaterBillSummary
   alias DahliaWeb.Endpoint
   use DahliaWeb, :live_view
 
@@ -96,8 +97,17 @@ defmodule DahliaWeb.WaterBillLive do
      |> stream_insert(:summaries, summary)}
   end
 
-  def handle_event("delete", %{"id" => id}, socket) do
-    evidence = Bill.get_water_bill_evidence!(id)
+  def handle_info(%{event: "summary_deleted", payload: %{summary: summary}}, socket) do
+    {:noreply, stream_delete(socket, :summaries, summary)}
+  end
+
+  def handle_event("delete", %{"id" => evidence_id}, socket) do
+    with summary = %WaterBillSummary{} <- Bill.get_water_bill_summary_by_evidence_id(evidence_id),
+         {:ok, _deleted} <- Bill.delete_water_bill_summary(summary) do
+      Endpoint.broadcast(topic(socket), "summary_deleted", %{summary: summary})
+    end
+
+    evidence = Bill.get_water_bill_evidence!(evidence_id)
     {:ok, _deleted} = Bill.delete_water_bill_evidence(evidence)
 
     Endpoint.broadcast(topic(socket), "evidence_deleted", %{evidence: evidence})

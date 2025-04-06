@@ -6,7 +6,6 @@
 </div>
 <hr />
 <div id="evidence-list" phx-update="stream">
-  <div class="hidden last-child:block py-10 text-center">未処理の水道料金・検針票はありません。</div>
   <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
     <img
       phx-click={JS.patch(~p"/water/#{evidence.id}/summary/new")}
