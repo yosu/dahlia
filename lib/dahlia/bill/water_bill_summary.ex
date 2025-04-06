@@ -7,9 +7,7 @@ defmodule Dahlia.Bill.WaterBillSummary do
     field :bill_date, :date
     field :due_date, :date
     field :water_charge, :integer
-    field :water_charge_internal_tax, :integer
     field :sewer_charge, :integer
-    field :sewer_charge_internal_tax, :integer
     field :current_read, :integer
     field :current_read_date, :date
     field :previous_read, :integer
@@ -27,9 +25,7 @@ defmodule Dahlia.Bill.WaterBillSummary do
       :bill_date,
       :due_date,
       :water_charge,
-      :water_charge_internal_tax,
       :sewer_charge,
-      :sewer_charge_internal_tax,
       :current_read,
       :current_read_date,
       :previous_read,
@@ -40,9 +36,7 @@ defmodule Dahlia.Bill.WaterBillSummary do
       :bill_date,
       :due_date,
       :water_charge,
-      :water_charge_internal_tax,
       :sewer_charge,
-      :sewer_charge_internal_tax,
       :current_read,
       :current_read_date,
       :previous_read,
@@ -50,14 +44,12 @@ defmodule Dahlia.Bill.WaterBillSummary do
       :evidence_id
     ])
     |> validate_number(:water_charge, greater_than_or_equal_to: 0)
-    |> validate_number(:water_charge_internal_tax, greater_than_or_equal_to: 0)
     |> validate_number(:sewer_charge, greater_than_or_equal_to: 0)
-    |> validate_number(:sewer_charge_internal_tax, greater_than_or_equal_to: 0)
     |> validate_number(:current_read, greater_than_or_equal_to: 0)
     |> validate_number(:previous_read, greater_than_or_equal_to: 0)
   end
 
-  def total_charge(summary = %__MODULE__{}) do
+  def total_charge(%__MODULE__{} = summary) do
     summary.water_charge + summary.sewer_charge
   end
 end

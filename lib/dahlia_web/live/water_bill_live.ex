@@ -125,7 +125,6 @@ defmodule DahliaWeb.WaterBillLive do
   end
 
   def handle_info({DahliaWeb.WaterBillLive.SummaryForm, {:saved, summary}}, socket) do
-    IO.inspect(summary, label: "SummaryForm")
     Endpoint.broadcast(topic(socket), "summary_saved", %{summary: summary})
 
     {:noreply, socket}
@@ -140,8 +139,6 @@ defmodule DahliaWeb.WaterBillLive do
   end
 
   def handle_info(%{event: "summary_saved", payload: %{summary: summary}}, socket) do
-    IO.inspect(summary, label: "summary_saved")
-
     {:noreply,
      socket
      |> stream_delete(:evidences, %{id: summary.evidence_id})

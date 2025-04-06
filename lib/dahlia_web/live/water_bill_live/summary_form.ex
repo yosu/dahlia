@@ -27,19 +27,7 @@ defmodule DahliaWeb.WaterBillLive.SummaryForm do
         </div>
         <div class="flex gap-x-8">
           <.input type="number" field={@form[:water_charge]} label="上水道料金" />
-          <.input
-            type="number"
-            field={@form[:water_charge_internal_tax]}
-            label="うち消費税（上水道料金）"
-          />
-        </div>
-        <div class="flex gap-x-8">
           <.input type="number" field={@form[:sewer_charge]} label="下水道使用料" />
-          <.input
-            type="number"
-            field={@form[:sewer_charge_internal_tax]}
-            label="うち消費税（下水道使用料）"
-          />
         </div>
         <div class="flex gap-x-8">
           <.input type="number" field={@form[:current_read]} label="今回指針" />
