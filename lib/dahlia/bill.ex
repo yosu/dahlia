@@ -20,19 +20,25 @@ defmodule Dahlia.Bill do
   end
 
   def get_water_bill_evidence_with_data(id) do
-    WaterBillEvidence.Query.with_data()
-    |> WaterBillEvidence.Query.by_id(id)
-    |> Repo.one()
+    query =
+      from e in WaterBillEvidence,
+        join: d in assoc(e, :data),
+        preload: [data: d],
+        where: e.id == ^id
+
+    Repo.one(query)
   end
 
   @doc """
   Returns the list of evidences belongs to the user.
   """
   def water_bill_evidence_list(user) do
-    Repo.all(
-      WaterBillEvidence.Query.order_by_inserted_at()
-      |> WaterBillEvidence.Query.with_user(user)
-    )
+    query =
+      from e in WaterBillEvidence,
+        where: e.user_id == ^user.id,
+        order_by: {:desc, :inserted_at}
+
+    Repo.all(query)
   end
 
   @doc """
