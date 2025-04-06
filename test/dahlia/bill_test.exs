@@ -32,9 +32,23 @@ defmodule Dahlia.BillTest do
         Bill.get_water_bill_evidence_data_by_evidence_id!(e.id)
       end
     end
+
+    test "outstanding_water_bill_evidence_list/0 returns the list of evidence which has no summary" do
+      user = user_fixture()
+      evidence = water_bill_evidence_fixture(%{user: user})
+      _summary = water_bill_summary_fixture()
+
+      assert Bill.outstanding_water_bill_evidence_list(user) == [evidence]
+    end
   end
 
   describe "summaries" do
+    test "water_bill_summary_list/0 returns the list of summaries" do
+      summary = water_bill_summary_fixture()
+
+      assert Bill.water_bill_summary_list() == [summary]
+    end
+
     test "create_summary/1 with valid data create a summary" do
       e = water_bill_evidence_fixture()
 

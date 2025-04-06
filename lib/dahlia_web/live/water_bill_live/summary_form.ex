@@ -23,7 +23,7 @@ defmodule DahliaWeb.WaterBillLive.SummaryForm do
         <.input type="hidden" field={@form[:evidence_id]} value={@evidence_id} />
         <div class="flex gap-x-8">
           <.input type="date" field={@form[:bill_date]} label="請求日" />
-          <.input type="date" field={@form[:due_date]} label="納付期限" />
+          <.input type="date" field={@form[:due_date]} label="支払い期限" />
         </div>
         <div class="flex gap-x-8">
           <.input type="number" field={@form[:water_charge]} label="上水道料金" />
@@ -83,10 +83,8 @@ defmodule DahliaWeb.WaterBillLive.SummaryForm do
   end
 
   defp save_summary(params, socket) do
-    IO.inspect(params, label: "save_summary")
     case Bill.create_summary(params) do
       {:ok, summary} ->
-        IO.inspect(summary, label: "ok")
         notify_parent({:saved, summary})
 
         {:noreply,
@@ -95,7 +93,6 @@ defmodule DahliaWeb.WaterBillLive.SummaryForm do
          |> push_patch(to: ~p"/water")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset, label: "error")
         {:noreply, assign(socket, :form, to_form(changeset))}
     end
   end

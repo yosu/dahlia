@@ -56,4 +56,8 @@ defmodule Dahlia.Bill.WaterBillSummary do
     |> validate_number(:current_read, greater_than_or_equal_to: 0)
     |> validate_number(:previous_read, greater_than_or_equal_to: 0)
   end
+
+  def total_charge(summary = %__MODULE__{}) do
+    summary.water_charge + summary.sewer_charge
+  end
 end

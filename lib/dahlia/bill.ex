@@ -6,6 +6,8 @@ defmodule Dahlia.Bill do
   alias Dahlia.Repo
   alias Dahlia.Image
 
+  import Ecto.Query
+
   @doc """
   Gets a single evidence.
   """
@@ -31,6 +33,23 @@ defmodule Dahlia.Bill do
       WaterBillEvidence.Query.order_by_inserted_at()
       |> WaterBillEvidence.Query.with_user(user)
     )
+  end
+
+  @doc """
+  Returns the list of water bill evidences which has no summary.
+  """
+  def outstanding_water_bill_evidence_list(user) do
+    query =
+      from e in WaterBillEvidence,
+        left_join: s in WaterBillSummary,
+        on: s.evidence_id == e.id,
+        where: is_nil(s.evidence_id) and e.user_id == ^user.id
+
+    Repo.all(query)
+  end
+
+  def water_bill_summary_list() do
+    Repo.all(WaterBillSummary)
   end
 
   @doc """

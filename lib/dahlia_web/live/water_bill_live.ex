@@ -3,6 +3,7 @@ defmodule DahliaWeb.WaterBillLive do
   use DahliaWeb, :live_view
 
   alias Dahlia.Bill
+  alias Dahlia.Bill.WaterBillSummary
   alias DahliaWeb.Endpoint
 
   @evidence_topic "evidence_topic"
@@ -17,6 +18,7 @@ defmodule DahliaWeb.WaterBillLive do
     </div>
     <hr />
     <div id="evidence-list" phx-update="stream">
+      <div class="hidden last-child:block py-10 text-center">未処理の水道料金・検針票はありません。</div>
       <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
         <img
           phx-click={JS.patch(~p"/water/#{evidence.id}/summary/new")}
@@ -32,6 +34,21 @@ defmodule DahliaWeb.WaterBillLive do
           削除
         </.link>
       </div>
+    </div>
+    <div>
+      <h2 class="text-center text-2xl">処理済みの水道料金・検針票</h2>
+      <table class="p-2">
+        <thead>
+          <th>請求日</th>
+          <th>請求金額</th>
+        </thead>
+        <tbody id="summary-list" phx-update="stream">
+          <tr :for={{dom_id, summary} <- @streams.summaries} id={dom_id} class="py-2">
+            <td class="text-right">{summary.bill_date}</td>
+            <td class="pl-4 text-right">{WaterBillSummary.total_charge(summary)}円</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <.modal
       :if={@live_action in [:new]}
@@ -71,7 +88,8 @@ defmodule DahliaWeb.WaterBillLive do
 
     {:ok,
      socket
-     |> stream(:evidences, Bill.water_bill_evidence_list(socket.assigns.current_user))}
+     |> stream(:evidences, Bill.outstanding_water_bill_evidence_list(socket.assigns.current_user))
+     |> stream(:summaries, Bill.water_bill_summary_list())}
   end
 
   defp topic(socket) do
@@ -90,7 +108,7 @@ defmodule DahliaWeb.WaterBillLive do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "未処理の水道料金・検針表")
+    |> assign(:page_title, "未処理の水道料金・検針票")
   end
 
   defp apply_action(socket, :summary_new, %{"evidence_id" => evidence_id}) do
@@ -123,7 +141,11 @@ defmodule DahliaWeb.WaterBillLive do
 
   def handle_info(%{event: "summary_saved", payload: %{summary: summary}}, socket) do
     IO.inspect(summary, label: "summary_saved")
-    {:noreply, stream_delete(socket, :evidences, %{id: summary.evidence_id})}
+
+    {:noreply,
+     socket
+     |> stream_delete(:evidences, %{id: summary.evidence_id})
+     |> stream_insert(:summaries, summary)}
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
