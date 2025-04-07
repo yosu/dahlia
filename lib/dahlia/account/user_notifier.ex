@@ -9,7 +9,7 @@ defmodule Dahlia.Account.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"Dahlia", "contact@example.com"})
+      |> from({"Dahlia", "contact@fine-code.com"})
       |> subject(subject)
       |> text_body(body)
 
