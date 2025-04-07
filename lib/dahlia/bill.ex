@@ -15,6 +15,13 @@ defmodule Dahlia.Bill do
     Repo.get!(WaterBillEvidence, id)
   end
 
+  @doc """
+  Gets a single evidence.
+  """
+  def get_water_bill_evidence(id) do
+    Repo.get(WaterBillEvidence, id)
+  end
+
   def get_water_bill_evidence_data_by_evidence_id!(evidence_id) do
     Repo.get_by!(WaterBillEvidenceData, evidence_id: evidence_id)
   end

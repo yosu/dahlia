@@ -1,6 +1,12 @@
 <h1 class="p-2 text-center text-3xl">{@page_title}</h1>
 <div class="tabs tabs-lift">
-  <input type="radio" name="water-tabs" class="tab focus:ring-0" aria-label="未処理" checked="checked"/>
+  <input
+    type="radio"
+    name="water-tabs"
+    class="tab focus:ring-0"
+    aria-label="未処理"
+    checked="checked"
+  />
   <div class="tab-content bg-base-100 border-base-300 p-6">
     <h2 class="text-center text-2xl mb-4">未処理の水道料金・検針票</h2>
     <div class="mb-2">
@@ -27,7 +33,12 @@
     </div>
   </div>
 
-  <input type="radio" name="water-tabs" class="tab focus:ring-transparent" aria-label="処理済み"/>
+  <input
+    type="radio"
+    name="water-tabs"
+    class="tab focus:ring-transparent"
+    aria-label="処理済み"
+  />
   <div class="tab-content bg-base-100 border-base-300 p-6">
     <h2 class="text-center text-2xl mb-4">処理済みの水道料金・検針票</h2>
     <div :if={@summaries != []}>
