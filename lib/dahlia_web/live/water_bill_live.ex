@@ -21,7 +21,6 @@ defmodule DahliaWeb.WaterBillLive do
      socket
      |> stream(:evidences, Bill.outstanding_water_bill_evidence_list(user))
      |> assign_summaries()}
-
   end
 
   defp topic(socket) do
@@ -45,7 +44,7 @@ defmodule DahliaWeb.WaterBillLive do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "未処理の水道料金・検針票")
+    |> assign(:page_title, "水道料金・検針票")
   end
 
   defp apply_action(socket, :summary_new, %{"evidence_id" => evidence_id}) do
