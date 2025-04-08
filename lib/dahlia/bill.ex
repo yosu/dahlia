@@ -66,7 +66,8 @@ defmodule Dahlia.Bill do
       from s in WaterBillSummary,
         join: e in WaterBillEvidence,
         on: s.evidence_id == e.id,
-        where: e.user_id == ^user.id
+        where: e.user_id == ^user.id,
+        order_by: {:desc, s.bill_date}
 
     Repo.all(query)
   end
