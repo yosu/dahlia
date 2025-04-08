@@ -93,7 +93,7 @@ defmodule DahliaWeb.WaterBillLive.SummaryForm do
         {:noreply,
          socket
          |> put_flash(:info, "保存しました")
-         |> push_patch(to: ~p"/water")}
+         |> push_patch(to: ~p"/water/summary")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset))}
