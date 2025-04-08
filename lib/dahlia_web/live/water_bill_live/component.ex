@@ -24,12 +24,14 @@ defmodule DahliaWeb.WaterBillLive.Component do
       <thead>
         <th class="px-4">請求日</th>
         <th class="px-4">請求金額</th>
+        <th class="px-4">使用水量</th>
         <th></th>
       </thead>
       <tbody>
         <tr :for={summary <- @summaries} id={summary.id} class="py-2">
           <.summary_cell summary={summary}>{summary.bill_date}</.summary_cell>
           <.summary_cell summary={summary}>{WaterBillSummary.total_charge(summary)}円</.summary_cell>
+          <.summary_cell summary={summary}>{WaterBillSummary.usage(summary)}㎥</.summary_cell>
           <td>
             <.link
               class="text-red-500"

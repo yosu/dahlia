@@ -52,4 +52,8 @@ defmodule Dahlia.Bill.WaterBillSummary do
   def total_charge(%__MODULE__{} = summary) do
     summary.water_charge + summary.sewer_charge
   end
+
+  def usage(%__MODULE__{} = summary) do
+    summary.current_read - summary.previous_read
+  end
 end
