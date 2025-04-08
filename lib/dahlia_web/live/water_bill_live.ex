@@ -38,13 +38,15 @@ defmodule DahliaWeb.WaterBillLive do
   end
 
   defp apply_action(socket, :new, _parmas) do
-    socket
-    |> assign(:page_title, "水道料金・検針票のアップロード")
+    assign(socket, :page_title, "水道料金・検針票のアップロード")
   end
 
   defp apply_action(socket, :index, _params) do
-    socket
-    |> assign(:page_title, "水道料金・検針票")
+    assign(socket, :page_title, "水道料金・検針票")
+  end
+
+  defp apply_action(socket, :summary, _params) do
+    assign(socket, :page_title, "水道料金・検針票")
   end
 
   defp apply_action(socket, :summary_new, %{"evidence_id" => evidence_id}) do

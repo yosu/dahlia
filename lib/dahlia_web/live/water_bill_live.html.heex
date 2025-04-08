@@ -5,10 +5,10 @@
     name="water-tabs"
     class="tab focus:ring-0"
     aria-label="未処理"
-    checked="checked"
+    checked={@live_action == :index}
+    phx-click={JS.patch(~p"/water")}
   />
   <div class="tab-content bg-base-100 border-base-300 p-6">
-    <h2 class="text-center text-2xl mb-4">未処理の水道料金・検針票</h2>
     <div class="mb-2">
       <.link patch={~p"/water/new"}>
         <.button>アップロード</.button>
@@ -38,9 +38,10 @@
     name="water-tabs"
     class="tab focus:ring-transparent"
     aria-label="処理済み"
+    checked={@live_action == :summary}
+    phx-click={JS.patch(~p"/water/summary")}
   />
   <div class="tab-content bg-base-100 border-base-300 p-6">
-    <h2 class="text-center text-2xl mb-4">処理済みの水道料金・検針票</h2>
     <div :if={@summaries != []}>
       <.summary_table summaries={@summaries} />
     </div>
@@ -63,7 +64,7 @@
   :if={@live_action in [:summary_new, :summary_edit]}
   show
   id="water-bill-summary-modal"
-  on_cancel={JS.patch(~p"/water")}
+  on_cancel={JS.patch(~p"/water/summary")}
 >
   <.live_component
     module={DahliaWeb.WaterBillLive.SummaryForm}
