@@ -80,6 +80,9 @@ defmodule DahliaWeb.Router do
       live "/water/summary", WaterBillLive, :summary
       live "/water/:evidence_id/summary/new", WaterBillLive, :summary_new
       live "/water/:evidence_id/summary/edit", WaterBillLive, :summary_edit
+
+      live "/gas", GasBillLive, :index
+      live "/gas/summary", GasBillLive, :summary
     end
   end
 

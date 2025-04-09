@@ -1,0 +1,86 @@
+<h1 class="p-2 text-center text-3xl">{@page_title}</h1>
+<div class="tabs tabs-lift">
+  <input
+    type="radio"
+    name="gas-tabs"
+    class="tab"
+    aria-label="未処理"
+    checked={@live_action == :index}
+    phx-click={JS.patch(~p"/gas")}
+  />
+  <div class="tab-content bg-base-100 border-base-300 p-6">
+    <div class="mb-2">
+      <.link patch={~p"/water/new"}>
+        <.button>アップロード</.button>
+      </.link>
+    </div>
+    <!--
+    <div id="evidence-list" phx-update="stream">
+      <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
+        <img
+          phx-click={JS.patch(~p"/water/#{evidence.id}/summary/new")}
+          src={~p"/water/evidences/#{evidence}"}
+          width="800"
+          class="cursor-pointer border-4 border-transparent hover:border-4 hover:border-brand"
+        />
+        <.link
+          class="text-red-500"
+          phx-click={JS.push("delete", value: %{"id" => evidence.id})}
+          data-confirm="本当に削除しますか？"
+        >
+          削除
+        </.link>
+      </div>
+    </div>
+    -->
+  </div>
+
+  <input
+    type="radio"
+    name="gas-tabs"
+    class="tab"
+    aria-label="処理済み"
+    checked={@live_action == :summary}
+    phx-click={JS.patch(~p"/gas/summary")}
+  />
+  <div class="tab-content bg-base-100 border-base-300 p-6">
+    <!--
+    <div :if={@summaries != []}>
+      <.summary_table summaries={@summaries} />
+    </div>
+    -->
+  </div>
+</div>
+<.modal
+  :if={@live_action in [:new]}
+  show
+  id="gas-bill-evidence-modal"
+  on_cancel={JS.patch(~p"/gas")}
+>
+  <.live_component
+    module={DahliaWeb.EvidenceLive.FormComponent}
+    id={:new}
+    title={@page_title}
+    current_user={@current_user}
+    evidence_mod={GasBillEvidence}
+    patch={~p"/gas"}
+  />
+</.modal>
+<!--
+<.modal
+  :if={@live_action in [:summary_new, :summary_edit]}
+  show
+  id="water-bill-summary-modal"
+  on_cancel={JS.patch(~p"/water/summary")}
+>
+  <.live_component
+    module={DahliaWeb.WaterBillLive.SummaryForm}
+    id={@live_action}
+    title={@page_title}
+    current_user={@current_user}
+    summary={@summary}
+    evidence_id={@evidence_id}
+    action={@live_action}
+  />
+</.modal>
+-->
