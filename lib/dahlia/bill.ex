@@ -1,5 +1,7 @@
 defmodule Dahlia.Bill do
   @moduledoc false
+  alias Dahlia.Bill.GasBillEvidence
+  alias Dahlia.Bill.GasBillEvidenceData
   alias Dahlia.Bill.WaterBillEvidence
   alias Dahlia.Bill.WaterBillEvidenceData
   alias Dahlia.Bill.WaterBillSummary
@@ -87,19 +89,23 @@ defmodule Dahlia.Bill do
   @doc """
   Save the evidence data.
   """
-  def save_water_bill_evidence(%{name: name, data: data, user: user}) do
+  def save_water_bill_evidence(attrs = %{}) do
+    save_bill_evidence(WaterBillEvidence, WaterBillEvidenceData, attrs)
+  end
+
+  defp save_bill_evidence(evidence_mod, evidence_data_mod, %{name: name, data: data, user: user}) do
     Repo.transaction(fn ->
       evidence =
-        WaterBillEvidence.new_changeset(%{
+        apply(evidence_mod, :new_changeset, [%{
           name: name,
           content_type: MIME.from_path(name),
           content_length: byte_size(data),
-          digest: WaterBillEvidence.digest(data),
+          digest: Dahlia.Bill.Evidence.digest(data),
           user_id: user.id
-        })
+        }])
         |> Repo.insert!()
 
-      WaterBillEvidenceData.new_changeset(%{data: data, evidence_id: evidence.id})
+      apply(evidence_data_mod, :new_changeset, [%{data: data, evidence_id: evidence.id}])
       |> Repo.insert!()
 
       evidence
@@ -146,5 +152,19 @@ defmodule Dahlia.Bill do
 
   def get_water_bill_summary!(summary_id) do
     Repo.get!(WaterBillSummary, summary_id)
+  end
+
+  # Gas bill
+  def save_gas_bill_evidence(attrs = %{}) do
+    save_bill_evidence(GasBillEvidence, GasBillEvidenceData, attrs)
+  end
+
+  def gas_bill_evidence_list(user) do
+    query =
+      from e in GasBillEvidence,
+      where: e.user_id == ^user.id,
+      order_by: {:desc, :inserted_at}
+
+    Repo.all(query)
   end
 end
