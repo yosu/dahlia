@@ -1,5 +1,6 @@
 defmodule Dahlia.Bill do
   @moduledoc false
+  alias Dahlia.Bill.GasBillSummary
   alias Dahlia.Bill.GasBillEvidence
   alias Dahlia.Bill.GasBillEvidenceData
   alias Dahlia.Bill.WaterBillEvidence
@@ -198,5 +199,40 @@ defmodule Dahlia.Bill do
 
   def delete_gas_bill_evidence(%GasBillEvidence{} = evidence) do
     Repo.delete(evidence)
+  end
+
+  def get_gas_bill_summary_by_evidence_id!(evidence_id) do
+    Repo.get_by!(GasBillSummary, evidence_id: evidence_id)
+  end
+
+  def get_gas_bill_summary_by_evidence_id(evidence_id) do
+    Repo.get_by(GasBillSummary, evidence_id: evidence_id)
+  end
+
+  def create_gas_summary(attrs \\ %{}) do
+    %GasBillSummary{}
+    |> GasBillSummary.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_gas_summary(%GasBillSummary{} = summary, attrs \\ %{})do
+    summary
+    |> GasBillSummary.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def gas_bill_summary_list(user) do
+    query =
+      from s in GasBillSummary,
+        join: e in GasBillEvidence,
+        on: s.evidence_id == e.id,
+        where: e.user_id == ^user.id,
+        order_by: {:desc, s.read_date}
+
+    Repo.all(query)
+  end
+
+  def delete_gas_bill_summary(%GasBillSummary{} = summary) do
+    Repo.delete(summary)
   end
 end

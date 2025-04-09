@@ -11,6 +11,7 @@ defmodule Dahlia.Bill.GasBillEvidence do
 
     belongs_to :user, Dahlia.Account.User
     has_one :data, Dahlia.Bill.GasBillEvidenceData, foreign_key: :evidence_id
+    has_one :summary, Dahlia.Bill.GasBillSummary, foreign_key: :evidence_id
 
     timestamps(type: :utc_datetime_usec, updated_at: false)
   end

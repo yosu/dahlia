@@ -17,6 +17,7 @@
     <div id="evidence-list" phx-update="stream">
       <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
         <img
+          phx-click={JS.patch(~p"/gas/#{evidence}/summary/new")}
           src={~p"/gas/evidences/#{evidence}"}
           width="800"
           class="cursor-pointer border-4 border-transparent hover:border-4 hover:border-brand"
@@ -41,11 +42,9 @@
     phx-click={JS.patch(~p"/gas/summary")}
   />
   <div class="tab-content bg-base-100 border-base-300 p-6">
-    <!--
     <div :if={@summaries != []}>
       <.summary_table summaries={@summaries} />
     </div>
-    -->
   </div>
 </div>
 <.modal
@@ -63,15 +62,14 @@
     patch={~p"/gas"}
   />
 </.modal>
-<!--
 <.modal
   :if={@live_action in [:summary_new, :summary_edit]}
   show
-  id="water-bill-summary-modal"
-  on_cancel={JS.patch(~p"/water/summary")}
+  id="gas-bill-summary-modal"
+  on_cancel={JS.patch(~p"/gas/summary")}
 >
   <.live_component
-    module={DahliaWeb.WaterBillLive.SummaryForm}
+    module={DahliaWeb.GasBillLive.SummaryForm}
     id={@live_action}
     title={@page_title}
     current_user={@current_user}
@@ -80,4 +78,3 @@
     action={@live_action}
   />
 </.modal>
--->
