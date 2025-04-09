@@ -1,4 +1,5 @@
 defmodule DahliaWeb.WaterBillLive do
+  alias Dahlia.Bill.WaterBillEvidence
   alias Dahlia.Bill.WaterBillSummary
   alias DahliaWeb.Endpoint
   use DahliaWeb, :live_view
@@ -65,7 +66,7 @@ defmodule DahliaWeb.WaterBillLive do
     |> assign(:summary, summary)
   end
 
-  def handle_info({DahliaWeb.WaterBillLive.EvidenceForm, {:saved, evidence}}, socket) do
+  def handle_info({DahliaWeb.EvidenceLive.FormComponent, {:saved, evidence}}, socket) do
     Endpoint.broadcast(topic(socket), "evidence_saved", %{evidence: evidence})
 
     {:noreply, socket}

@@ -22,5 +22,7 @@ defmodule Dahlia.Bill.GasBillEvidence do
     |> validate_required([:name, :content_type, :content_length, :digest, :user_id])
   end
 
-
+  def data_mod do
+    Dahlia.Bill.GasBillEvidenceData
+  end
 end
