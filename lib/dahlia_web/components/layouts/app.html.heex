@@ -1,5 +1,5 @@
 <header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+  <div class="flex items-center gap-4 border-b border-zinc-100 py-3 text-sm">
     <div class="flex items-center gap-4">
       <a href="/">
         <img src={~p"/images/logo.png"} width="36" />
@@ -8,7 +8,23 @@
         v{Application.spec(:dahlia, :vsn)}
       </p>
     </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900"></div>
+    <div class="flex items-center gap-4 leading-6">
+      <.link
+        navigate={~p"/water"}
+        class={[
+          "hover:underline",
+          @active_menu == :water && "text-brand underline"
+        ]}
+      >
+        水道料金
+      </.link>
+      <.link
+        navigate={~p"/gas"}
+        class={["hover:underline", @active_menu == :gas && "text-brand underline"]}
+      >
+        ガス料金
+      </.link>
+    </div>
   </div>
 </header>
 <main class="px-4 lg:py-20 sm:px-6 lg:px-8">

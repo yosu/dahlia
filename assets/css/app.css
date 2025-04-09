@@ -1,4 +1,8 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@theme {
+  --color-brand: #FF9B2F;
+}
+
 /* This file is for your main application CSS */

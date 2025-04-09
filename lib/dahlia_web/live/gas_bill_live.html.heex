@@ -2,23 +2,23 @@
 <div class="tabs tabs-lift">
   <input
     type="radio"
-    name="water-tabs"
-    class="tab focus:ring-0"
+    name="gas-tabs"
+    class="tab"
     aria-label="未処理"
     checked={@live_action == :index}
-    phx-click={JS.patch(~p"/water")}
+    phx-click={JS.patch(~p"/gas")}
   />
   <div class="tab-content bg-base-100 border-base-300 p-6">
     <div class="mb-2">
-      <.link patch={~p"/water/new"}>
+      <.link patch={~p"/gas/new"}>
         <.button>アップロード</.button>
       </.link>
     </div>
     <div id="evidence-list" phx-update="stream">
       <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
         <img
-          phx-click={JS.patch(~p"/water/#{evidence.id}/summary/new")}
-          src={~p"/water/evidences/#{evidence}"}
+          phx-click={JS.patch(~p"/gas/#{evidence}/summary/new")}
+          src={~p"/gas/evidences/#{evidence}"}
           width="800"
           class="cursor-pointer border-4 border-transparent hover:border-4 hover:border-brand"
         />
@@ -35,11 +35,11 @@
 
   <input
     type="radio"
-    name="water-tabs"
-    class="tab focus:ring-transparent"
+    name="gas-tabs"
+    class="tab"
     aria-label="処理済み"
     checked={@live_action == :summary}
-    phx-click={JS.patch(~p"/water/summary")}
+    phx-click={JS.patch(~p"/gas/summary")}
   />
   <div class="tab-content bg-base-100 border-base-300 p-6">
     <div :if={@summaries != []}>
@@ -50,26 +50,26 @@
 <.modal
   :if={@live_action in [:new]}
   show
-  id="water-bill-evidence-modal"
-  on_cancel={JS.patch(~p"/water")}
+  id="gas-bill-evidence-modal"
+  on_cancel={JS.patch(~p"/gas")}
 >
   <.live_component
     module={DahliaWeb.EvidenceLive.FormComponent}
     id={:new}
     title={@page_title}
     current_user={@current_user}
-    evidence_mod={WaterBillEvidence}
-    patch={~p"/water"}
+    evidence_mod={GasBillEvidence}
+    patch={~p"/gas"}
   />
 </.modal>
 <.modal
   :if={@live_action in [:summary_new, :summary_edit]}
   show
-  id="water-bill-summary-modal"
-  on_cancel={JS.patch(~p"/water/summary")}
+  id="gas-bill-summary-modal"
+  on_cancel={JS.patch(~p"/gas/summary")}
 >
   <.live_component
-    module={DahliaWeb.WaterBillLive.SummaryForm}
+    module={DahliaWeb.GasBillLive.SummaryForm}
     id={@live_action}
     title={@page_title}
     current_user={@current_user}

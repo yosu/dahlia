@@ -10,8 +10,8 @@ defmodule Dahlia.BillTest do
   import Dahlia.BillFixtures
   import Dahlia.AccountFixtures
 
-  describe "evidences" do
-    test "water_bill_evidence_list/0 returns all evidences" do
+  describe "water bill" do
+    test "water_bill_evidence_list/1 returns all evidences" do
       user = user_fixture()
       evid = water_bill_evidence_fixture(%{user: user})
 
@@ -42,9 +42,7 @@ defmodule Dahlia.BillTest do
 
       assert Bill.outstanding_water_bill_evidence_list(user) == [evidence]
     end
-  end
 
-  describe "summaries" do
     test "water_bill_summary_list/1 returns the list of summaries" do
       summary = water_bill_summary_fixture()
       evidence = Bill.get_water_bill_evidence!(summary.evidence_id)
@@ -104,6 +102,28 @@ defmodule Dahlia.BillTest do
       assert {:ok, %WaterBillSummary{}} = Bill.delete_water_bill_summary(summary)
       assert_raise Ecto.NoResultsError, fn -> Bill.get_water_bill_summary!(summary.id) end
       assert %WaterBillEvidence{} = Bill.get_water_bill_evidence!(summary.evidence_id)
+    end
+  end
+
+  describe "gas_bill" do
+    test "gas_bill_evidence_list/1 returns " do
+      user = user_fixture()
+      evidence = gas_bill_evidence_fixture(%{user: user})
+
+      assert Bill.gas_bill_evidence_list(user) == [evidence]
+    end
+
+    test "get_gas_bill_evidence!/1 returns the evidence" do
+      e = gas_bill_evidence_fixture()
+
+      assert Bill.get_gas_bill_evidence!(e.id) == e
+    end
+
+    test "delete_gas_bill_evidence/1 deletes a evidence" do
+      e = gas_bill_evidence_fixture()
+
+      assert {:ok, e} = Bill.delete_gas_bill_evidence(e)
+      assert_raise Ecto.NoResultsError, fn -> Bill.get_gas_bill_evidence!(e.id) end
     end
   end
 end

@@ -1,4 +1,4 @@
-defmodule DahliaWeb.WaterBillLive.EvidenceForm do
+defmodule DahliaWeb.EvidenceLive.FormComponent do
   use DahliaWeb, :live_component
 
   alias Dahlia.Bill
@@ -11,13 +11,7 @@ defmodule DahliaWeb.WaterBillLive.EvidenceForm do
         {@title}
       </.header>
 
-      <.simple_form
-        for={@form}
-        id="water-bill-evidence-form"
-        phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
-      >
+      <.simple_form for={@form} id={@id} phx-target={@myself} phx-change="validate" phx-submit="save">
         <.live_file_input upload={@uploads.photo} />
         <div :for={entry <- @uploads.photo.entries}>
           <.live_img_preview entry={entry} width="75" />
@@ -68,7 +62,12 @@ defmodule DahliaWeb.WaterBillLive.EvidenceForm do
 
     [evidence] =
       consume_uploaded_entries(socket, :photo, fn meta, entry ->
-        Bill.save_water_bill_evidence_from_upload(meta.path, entry.client_name, user)
+        Bill.save_bill_evidence_from_upload(
+          socket.assigns.evidence_mod,
+          meta.path,
+          entry.client_name,
+          user
+        )
       end)
 
     notify_parent({:saved, evidence})
@@ -76,7 +75,7 @@ defmodule DahliaWeb.WaterBillLive.EvidenceForm do
     {:noreply,
      socket
      |> put_flash(:info, "保存しました")
-     |> push_patch(to: ~p"/water")}
+     |> push_patch(to: socket.assigns.patch)}
   end
 
   @impl true

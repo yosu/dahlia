@@ -57,7 +57,7 @@ defmodule DahliaWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     live_session :redirect_if_user_is_authenticated,
-      on_mount: [{DahliaWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      on_mount: [{DahliaWeb.UserAuth, :redirect_if_user_is_authenticated}, DahliaWeb.Nav] do
       live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
@@ -71,7 +71,7 @@ defmodule DahliaWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{DahliaWeb.UserAuth, :ensure_authenticated}] do
+      on_mount: [{DahliaWeb.UserAuth, :ensure_authenticated}, DahliaWeb.Nav] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
@@ -80,6 +80,12 @@ defmodule DahliaWeb.Router do
       live "/water/summary", WaterBillLive, :summary
       live "/water/:evidence_id/summary/new", WaterBillLive, :summary_new
       live "/water/:evidence_id/summary/edit", WaterBillLive, :summary_edit
+
+      live "/gas", GasBillLive, :index
+      live "/gas/new", GasBillLive, :new
+      live "/gas/summary", GasBillLive, :summary
+      live "/gas/:evidence_id/summary/new", GasBillLive, :summary_new
+      live "/gas/:evidence_id/summary/edit", GasBillLive, :summary_edit
     end
   end
 
@@ -89,7 +95,7 @@ defmodule DahliaWeb.Router do
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,
-      on_mount: [{DahliaWeb.UserAuth, :mount_current_user}] do
+      on_mount: [{DahliaWeb.UserAuth, :mount_current_user}, DahliaWeb.Nav] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
@@ -99,5 +105,6 @@ defmodule DahliaWeb.Router do
     pipe_through [:image, :require_authenticated_user_image]
 
     get "/water/evidences/:id", WaterBillController, :show
+    get "/gas/evidences/:id", GasBillController, :show
   end
 end
