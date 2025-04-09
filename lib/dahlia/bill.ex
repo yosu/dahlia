@@ -1,6 +1,7 @@
 defmodule Dahlia.Bill do
   @moduledoc false
   alias Dahlia.Bill.GasBillEvidence
+  alias Dahlia.Bill.GasBillEvidenceData
   alias Dahlia.Bill.WaterBillEvidence
   alias Dahlia.Bill.WaterBillEvidenceData
   alias Dahlia.Bill.WaterBillSummary
@@ -60,6 +61,18 @@ defmodule Dahlia.Bill do
         where: is_nil(s.evidence_id) and e.user_id == ^user.id
 
     Repo.all(query)
+  end
+
+  def outstanding_gas_bill_evidence_list(user) do
+    query =
+      from e in GasBillEvidence,
+        where: e.user_id == ^user.id
+        #left_join: s in WaterBillSummary,
+        #on: s.evidence_id == e.id,
+        #where: is_nil(s.evidence_id) and e.user_id == ^user.id
+
+    Repo.all(query)
+
   end
 
   def water_bill_summary_list(user) do
@@ -169,5 +182,21 @@ defmodule Dahlia.Bill do
         order_by: {:desc, :inserted_at}
 
     Repo.all(query)
+  end
+
+  def get_gas_bill_evidence(id) do
+    Repo.get(GasBillEvidence, id)
+  end
+
+  def get_gas_bill_evidence!(id) do
+    Repo.get!(GasBillEvidence, id)
+  end
+
+  def get_gas_bill_evidence_data_by_evidence_id!(evidence_id) do
+    Repo.get_by!(GasBillEvidenceData, evidence_id: evidence_id)
+  end
+
+  def delete_gas_bill_evidence(%GasBillEvidence{} = evidence) do
+    Repo.delete(evidence)
   end
 end

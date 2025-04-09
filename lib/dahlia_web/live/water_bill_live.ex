@@ -8,12 +8,13 @@ defmodule DahliaWeb.WaterBillLive do
   alias DahliaWeb.Endpoint
 
   import DahliaWeb.WaterBillLive.Component
+  import DahliaWeb.LiveHelper
 
-  @evidence_topic "evidence_topic"
+  @topic "water_bill_live"
 
   def mount(_param, _session, socket) do
     if connected?(socket) do
-      Endpoint.subscribe(topic(socket))
+      Endpoint.subscribe(topic(@topic, socket))
     end
 
     user = socket.assigns.current_user
@@ -22,11 +23,6 @@ defmodule DahliaWeb.WaterBillLive do
      socket
      |> stream(:evidences, Bill.outstanding_water_bill_evidence_list(user))
      |> assign_summaries()}
-  end
-
-  defp topic(socket) do
-    user = socket.assigns.current_user
-    @evidence_topic <> ":" <> user.id
   end
 
   defp assign_summaries(socket) do
@@ -67,19 +63,19 @@ defmodule DahliaWeb.WaterBillLive do
   end
 
   def handle_info({DahliaWeb.EvidenceLive.FormComponent, {:saved, evidence}}, socket) do
-    Endpoint.broadcast(topic(socket), "evidence_saved", %{evidence: evidence})
+    Endpoint.broadcast(topic(@topic, socket), "evidence_saved", %{evidence: evidence})
 
     {:noreply, socket}
   end
 
   def handle_info({DahliaWeb.WaterBillLive.SummaryForm, {:saved, summary}}, socket) do
-    Endpoint.broadcast(topic(socket), "summary_saved", %{summary: summary})
+    Endpoint.broadcast(topic(@topic, socket), "summary_saved", %{summary: summary})
 
     {:noreply, socket}
   end
 
   def handle_info({DahliaWeb.WaterBillLive.SummaryForm, {:updated, summary}}, socket) do
-    Endpoint.broadcast(topic(socket), "summary_updated", %{summary: summary})
+    Endpoint.broadcast(topic(@topic, socket), "summary_updated", %{summary: summary})
 
     {:noreply, socket}
   end
@@ -110,13 +106,13 @@ defmodule DahliaWeb.WaterBillLive do
   def handle_event("delete", %{"id" => evidence_id}, socket) do
     with summary = %WaterBillSummary{} <- Bill.get_water_bill_summary_by_evidence_id(evidence_id),
          {:ok, _deleted} <- Bill.delete_water_bill_summary(summary) do
-      Endpoint.broadcast(topic(socket), "summary_deleted", %{summary: summary})
+      Endpoint.broadcast(topic(@topic, socket), "summary_deleted", %{summary: summary})
     end
 
     evidence = Bill.get_water_bill_evidence!(evidence_id)
     {:ok, _deleted} = Bill.delete_water_bill_evidence(evidence)
 
-    Endpoint.broadcast(topic(socket), "evidence_deleted", %{evidence: evidence})
+    Endpoint.broadcast(topic(@topic, socket), "evidence_deleted", %{evidence: evidence})
 
     {:noreply, socket}
   end

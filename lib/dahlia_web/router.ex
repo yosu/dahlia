@@ -82,6 +82,7 @@ defmodule DahliaWeb.Router do
       live "/water/:evidence_id/summary/edit", WaterBillLive, :summary_edit
 
       live "/gas", GasBillLive, :index
+      live "/gas/new", GasBillLive, :new
       live "/gas/summary", GasBillLive, :summary
     end
   end
@@ -102,5 +103,6 @@ defmodule DahliaWeb.Router do
     pipe_through [:image, :require_authenticated_user_image]
 
     get "/water/evidences/:id", WaterBillController, :show
+    get "/gas/evidences/:id", GasBillController, :show
   end
 end

@@ -112,5 +112,18 @@ defmodule Dahlia.BillTest do
 
       assert Bill.gas_bill_evidence_list(user) == [evidence]
     end
+
+    test "get_gas_bill_evidence!/1 returns the evidence" do
+      e = gas_bill_evidence_fixture()
+
+      assert Bill.get_gas_bill_evidence!(e.id) == e
+    end
+
+    test "delete_gas_bill_evidence/1 deletes a evidence" do
+      e = gas_bill_evidence_fixture()
+
+      assert {:ok, e} = Bill.delete_gas_bill_evidence(e)
+      assert_raise Ecto.NoResultsError, fn -> Bill.get_gas_bill_evidence!(e.id) end
+    end
   end
 end

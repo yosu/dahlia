@@ -10,16 +10,14 @@
   />
   <div class="tab-content bg-base-100 border-base-300 p-6">
     <div class="mb-2">
-      <.link patch={~p"/water/new"}>
+      <.link patch={~p"/gas/new"}>
         <.button>アップロード</.button>
       </.link>
     </div>
-    <!--
     <div id="evidence-list" phx-update="stream">
       <div :for={{dom_id, evidence} <- @streams.evidences} id={dom_id} class="p-2">
         <img
-          phx-click={JS.patch(~p"/water/#{evidence.id}/summary/new")}
-          src={~p"/water/evidences/#{evidence}"}
+          src={~p"/gas/evidences/#{evidence}"}
           width="800"
           class="cursor-pointer border-4 border-transparent hover:border-4 hover:border-brand"
         />
@@ -32,7 +30,6 @@
         </.link>
       </div>
     </div>
-    -->
   </div>
 
   <input
