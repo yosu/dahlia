@@ -1,4 +1,5 @@
 defmodule DahliaWeb.Nav do
+  @moduledoc false
   use Phoenix.LiveView
 
   def on_mount(:default, _params, _session, socket) do
