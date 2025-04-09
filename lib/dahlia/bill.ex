@@ -88,7 +88,7 @@ defmodule Dahlia.Bill do
   @doc """
   Save the evidence data.
   """
-  def save_water_bill_evidence(attrs = %{}) do
+  def save_water_bill_evidence(%{} = attrs) do
     save_bill_evidence(WaterBillEvidence, attrs)
   end
 
@@ -158,7 +158,7 @@ defmodule Dahlia.Bill do
   end
 
   # Gas bill
-  def save_gas_bill_evidence(attrs = %{}) do
+  def save_gas_bill_evidence(%{} = attrs) do
     save_bill_evidence(GasBillEvidence, attrs)
   end
 
