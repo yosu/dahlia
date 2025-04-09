@@ -72,7 +72,6 @@ defmodule Dahlia.Bill do
         where: is_nil(s.evidence_id) and e.user_id == ^user.id
 
     Repo.all(query)
-
   end
 
   def water_bill_summary_list(user) do
@@ -214,7 +213,7 @@ defmodule Dahlia.Bill do
     |> Repo.insert()
   end
 
-  def update_gas_summary(%GasBillSummary{} = summary, attrs \\ %{})do
+  def update_gas_summary(%GasBillSummary{} = summary, attrs \\ %{}) do
     summary
     |> GasBillSummary.changeset(attrs)
     |> Repo.update()

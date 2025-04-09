@@ -21,6 +21,7 @@ defmodule DahliaWeb.WaterBillLive do
 
     {:ok,
      socket
+     |> assign(:active_menu, :water)
      |> stream(:evidences, Bill.outstanding_water_bill_evidence_list(user))
      |> assign_summaries()}
   end

@@ -20,6 +20,7 @@ defmodule DahliaWeb.GasBillLive do
 
     {:ok,
      socket
+     |> assign(:active_menu, :gas)
      |> stream(:evidences, Bill.outstanding_gas_bill_evidence_list(user))
      |> assign_summaries()}
   end
