@@ -67,10 +67,9 @@ defmodule Dahlia.Bill do
   def outstanding_gas_bill_evidence_list(user) do
     query =
       from e in GasBillEvidence,
-        where: e.user_id == ^user.id
-        #left_join: s in WaterBillSummary,
-        #on: s.evidence_id == e.id,
-        #where: is_nil(s.evidence_id) and e.user_id == ^user.id
+        left_join: s in GasBillSummary,
+        on: s.evidence_id == e.id,
+        where: is_nil(s.evidence_id) and e.user_id == ^user.id
 
     Repo.all(query)
 

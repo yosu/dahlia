@@ -18,10 +18,10 @@ defmodule DahliaWeb.GasBillLive do
 
     user = socket.assigns.current_user
 
-    {:ok, socket
+    {:ok,
+     socket
      |> stream(:evidences, Bill.outstanding_gas_bill_evidence_list(user))
-     |> assign_summaries()
-  }
+     |> assign_summaries()}
   end
 
   defp assign_summaries(socket) do

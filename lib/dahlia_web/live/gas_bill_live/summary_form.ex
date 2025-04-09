@@ -1,5 +1,5 @@
 defmodule DahliaWeb.GasBillLive.SummaryForm do
-alias Dahlia.Bill.GasBillSummary
+  alias Dahlia.Bill.GasBillSummary
   use DahliaWeb, :live_component
 
   alias Dahlia.Bill

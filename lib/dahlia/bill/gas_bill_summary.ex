@@ -1,4 +1,5 @@
 defmodule Dahlia.Bill.GasBillSummary do
+  @moduledoc false
   use Dahlia.Schema, prefix: "gbs_"
   import Ecto.Changeset
 

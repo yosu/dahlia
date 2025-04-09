@@ -1,5 +1,4 @@
 defmodule DahliaWeb.GasBillController do
-
   use DahliaWeb, :controller
 
   alias Dahlia.Bill
