@@ -49,7 +49,7 @@ defmodule Dahlia.BillFixtures do
     {:ok, summary} =
       attrs
       |> valid_water_bill_summary_attributes()
-      |> Bill.create_summary()
+      |> Bill.create_water_summary()
 
     summary
   end

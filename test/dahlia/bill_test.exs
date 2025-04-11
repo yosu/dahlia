@@ -66,7 +66,7 @@ defmodule Dahlia.BillTest do
         evidence_id: e.id
       }
 
-      assert {:ok, %WaterBillSummary{} = summary} = Bill.create_summary(valid_attrs)
+      assert {:ok, %WaterBillSummary{} = summary} = Bill.create_water_summary(valid_attrs)
       assert summary.evidence_id == e.id
     end
 
@@ -75,7 +75,7 @@ defmodule Dahlia.BillTest do
         water_charge: -1
       }
 
-      assert {:error, %Ecto.Changeset{}} = Bill.create_summary(invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Bill.create_water_summary(invalid_attrs)
     end
 
     test "get_water_bill_summary_by_evidence_id!/1 with valid evidence id returns the summary" do

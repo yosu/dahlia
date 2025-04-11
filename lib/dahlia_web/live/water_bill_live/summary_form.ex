@@ -56,13 +56,13 @@ defmodule DahliaWeb.WaterBillLive.SummaryForm do
      socket
      |> assign(assigns)
      |> assign_new(:form, fn ->
-       to_form(Bill.change_summary(summary))
+       to_form(Bill.change_water_summary(summary))
      end)}
   end
 
   @impl true
   def handle_event("validate", %{"water_bill_summary" => summary_params}, socket) do
-    changeset = Bill.change_summary(socket.assigns.summary, summary_params)
+    changeset = Bill.change_water_summary(socket.assigns.summary, summary_params)
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
@@ -71,7 +71,7 @@ defmodule DahliaWeb.WaterBillLive.SummaryForm do
   end
 
   defp save_summary(params, :summary_new, socket) do
-    case Bill.create_summary(params) do
+    case Bill.create_water_summary(params) do
       {:ok, summary} ->
         notify_parent({:saved, summary})
 
@@ -86,7 +86,7 @@ defmodule DahliaWeb.WaterBillLive.SummaryForm do
   end
 
   defp save_summary(params, :summary_edit, socket) do
-    case Bill.update_summary(socket.assigns.summary, params) do
+    case Bill.update_water_summary(socket.assigns.summary, params) do
       {:ok, summary} ->
         notify_parent({:updated, summary})
 

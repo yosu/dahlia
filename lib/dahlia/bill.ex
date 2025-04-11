@@ -137,17 +137,17 @@ defmodule Dahlia.Bill do
   @doc """
   Returns WaterBillSummary changeset.
   """
-  def change_summary(%WaterBillSummary{} = summary, attrs \\ %{}) do
+  def change_water_summary(%WaterBillSummary{} = summary, attrs \\ %{}) do
     WaterBillSummary.changeset(summary, attrs)
   end
 
-  def create_summary(attrs \\ %{}) do
+  def create_water_summary(attrs \\ %{}) do
     %WaterBillSummary{}
     |> WaterBillSummary.changeset(attrs)
     |> Repo.insert()
   end
 
-  def update_summary(%WaterBillSummary{} = summary, attrs \\ %{}) do
+  def update_water_summary(%WaterBillSummary{} = summary, attrs \\ %{}) do
     summary
     |> WaterBillSummary.changeset(attrs)
     |> Repo.update()
