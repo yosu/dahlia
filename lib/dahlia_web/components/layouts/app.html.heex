@@ -9,21 +9,20 @@
       </p>
     </div>
     <div class="flex items-center gap-4 leading-6">
-      <.link
-        navigate={~p"/water"}
-        class={[
-          "hover:underline",
-          @active_menu == :water && "text-brand underline"
-        ]}
-      >
+      <%= if @active_menu == :water do %>
         水道料金
-      </.link>
-      <.link
-        navigate={~p"/gas"}
-        class={["hover:underline", @active_menu == :gas && "text-brand underline"]}
-      >
+      <% else %>
+        <.link navigate={~p"/water"} class="text-brand underline">
+          水道料金
+        </.link>
+      <% end %>
+      <%= if @active_menu == :gas do %>
         ガス料金
-      </.link>
+      <% else %>
+        <.link navigate={~p"/gas"} class="text-brand underline">
+          ガス料金
+        </.link>
+      <% end %>
     </div>
   </div>
 </header>
